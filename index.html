@@ -997,18 +997,22 @@ async function saveToday() {
   btn.textContent = 'Saving…';
 
   try {
+    console.log('Sending to Apps Script:', entry);
     // text/plain avoids CORS preflight with Apps Script
-    await fetch(CFG.SCRIPT_URL, {
+    const r = await fetch(CFG.SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(entry),
     });
+    const j = await r.json();
+    console.log('Response:', j);
+    if (!r.ok || !j.success) throw new Error(j.error || 'Server error');
     msg.className = 'save-msg ok';
     msg.textContent = 'Saved ✔';
   } catch(e) {
     msg.className = 'save-msg err';
-    msg.textContent = 'Save failed — check connection';
-    console.error(e);
+    msg.textContent = 'Save failed — check console';
+    console.error('Save error:', e.message, e);
   } finally {
     btn.disabled = false;
     btn.textContent = "Save Today's Practice";
