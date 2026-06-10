@@ -1,5 +1,5 @@
 /* 111 Days Sadhana — lightweight service worker */
-const CACHE = 'sadhana-v3';
+const CACHE = 'sadhana-v4';
 const SHELL = [
   './',
   './index.html',

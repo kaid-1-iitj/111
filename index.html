@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>111 Days Sadhana · Isha</title>
+  <title>Today's Practice</title>
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#2A1E14" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Sadhana" />
+  <meta name="apple-mobile-web-app-title" content="Today's Practice" />
   <link rel="apple-touch-icon" href="icon-192.png" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
 
@@ -38,14 +38,12 @@
       --success:    #2E7D32;
       --font-head:  'Roboto', sans-serif;
       --font-body:  'Open Sans', sans-serif;
-      --radius:     14px;
-      --shadow:     0 2px 12px rgba(90,60,30,0.06);
-      --shadow-lg:  0 12px 40px rgba(90,60,30,0.16);
+      --radius:     16px;
+      --shadow:     0 2px 14px rgba(90,60,30,0.06);
     }
 
-    /* ─── Reset ─────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { -webkit-text-size-adjust: 100%; }
     body {
       font-family: var(--font-body);
       background: var(--bg);
@@ -54,725 +52,225 @@
       -webkit-font-smoothing: antialiased;
     }
     button { font-family: inherit; cursor: pointer; }
-    a { text-decoration: none; }
 
     /* ─── Header ─────────────────────────────────────── */
     .header {
-      background: var(--dark);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: env(safe-area-inset-top) max(28px, env(safe-area-inset-right)) 0 max(28px, env(safe-area-inset-left));
-      min-height: 64px;
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      transition: box-shadow 0.3s, background 0.3s;
-    }
-    /* thin progress stripe along the bottom of the header */
-    .header::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0;
-      height: 2px;
-      width: var(--hprog, 0%);
-      background: linear-gradient(90deg, var(--orange), var(--crimson));
-      transition: width 1.2s ease;
-      pointer-events: none;
-    }
-    .header.scrolled {
-      background: rgba(42,30,20,0.95);
-      box-shadow: 0 3px 28px rgba(0,0,0,0.32);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-    .header-brand { display: flex; align-items: center; gap: 14px; }
-    .header-icon {
-      width: 38px; height: 38px;
-      background: var(--orange);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .header-icon svg { display: block; }
-    .header-name {
-      font-family: var(--font-head);
-      font-weight: 700;
-      font-size: 17px;
-      color: #fff;
-      letter-spacing: 0.3px;
-    }
-    .header-sub {
-      font-size: 10px;
-      color: rgba(255,255,255,0.42);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-top: 2px;
-    }
-    .header-counter { text-align: right; }
-    .header-day {
-      font-family: var(--font-head);
-      font-weight: 900;
-      font-size: 30px;
-      color: var(--orange);
-      line-height: 1;
-    }
-    .header-of {
-      font-size: 10px;
-      color: rgba(255,255,255,0.35);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
-
-    /* ─── Layout ─────────────────────────────────────── */
-    .layout {
-      display: grid;
-      grid-template-columns: 380px 1fr;
-      min-height: calc(100vh - 64px);
-    }
-
-    /* ─── Left Panel: Today ──────────────────────────── */
-    .today-panel {
-      background: var(--card);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      position: sticky;
-      top: 64px;
-      height: calc(100vh - 64px);
-      overflow-y: auto;
-    }
-
-    /* Hero — light, earthy, Indian folk-art */
-    .hero {
-      background: linear-gradient(165deg, var(--cream) 0%, var(--cream-2) 100%);
-      padding: 30px 28px 26px;
-      color: var(--dark);
-      position: relative;
-      overflow: hidden;
-      border-bottom: 1px solid var(--border);
-    }
-    .hero-greeting {
-      font-size: 11px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--brown);
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .hero-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 14px;
+      padding:
+        calc(env(safe-area-inset-top) + 14px)
+        max(20px, env(safe-area-inset-right)) 14px
+        max(20px, env(safe-area-inset-left));
+      background: var(--dark);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      transition: box-shadow 0.3s;
     }
-    .hero-left { min-width: 0; }
-
-    /* Live practice-mandala */
-    .mandala-wrap {
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 7px;
-    }
-    .mandala { width: 104px; height: 104px; display: block; overflow: visible; }
-    .m-disc { fill: none; stroke: rgba(140,94,60,0.22); stroke-width: 2.4; transition: stroke 0.4s; }
-    .m-dots { fill: none; stroke: rgba(140,94,60,0.20); stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 0.5 7; transition: stroke 0.4s; }
-    .m-core { fill: var(--orange); opacity: 0; transform-origin: center; transition: opacity 0.5s; }
-    .m-ray line {
-      stroke: rgba(140,94,60,0.22);
-      stroke-width: 2.6;
-      stroke-linecap: round;
-      transition: stroke 0.35s ease;
-    }
-    .m-ray.on line { stroke: var(--ray-color); }
-    #ray-surya     { --ray-color: var(--orange); }
-    #ray-shambhavi { --ray-color: var(--crimson); }
-    #ray-bhuta     { --ray-color: var(--blue); }
-    #ray-devi      { --ray-color: var(--brown); }
-    .mandala.complete .m-core { opacity: 0.14; animation: bloom 0.9s ease-out; }
-    .mandala.complete .m-disc { stroke: var(--orange); }
-    @keyframes bloom {
-      0%   { opacity: 0;    transform: scale(0.6); }
-      60%  { opacity: 0.30; transform: scale(1.12); }
-      100% { opacity: 0.14; transform: scale(1); }
-    }
-    .mandala-meter {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .mm-dot {
-      width: 7px; height: 7px;
+    .header.scrolled { box-shadow: 0 3px 22px rgba(0,0,0,0.28); }
+    .header-brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
+    .header-icon {
+      width: 32px; height: 32px;
+      background: rgba(236,103,27,0.92);
       border-radius: 50%;
-      background: rgba(140,94,60,0.22);
-      transition: background 0.25s, transform 0.25s;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
     }
-    .mm-dot.on { transform: scale(1.15); }
-    .mm-dot.on#mm-1 { background: var(--orange); }
-    .mm-dot.on#mm-2 { background: var(--crimson); }
-    .mm-dot.on#mm-3 { background: var(--blue); }
-    .mm-dot.on#mm-4 { background: var(--brown); }
-    .mm-label {
-      font-size: 10px;
-      color: var(--light);
-      margin-left: 4px;
-      font-weight: 600;
-    }
-    .hero-milestone {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 4px 10px;
-      background: rgba(236,103,27,0.12);
-      border: 1px solid rgba(236,103,27,0.3);
-      border-radius: 20px;
-      font-family: var(--font-head);
-      font-weight: 700;
-      font-size: 10.5px;
-      letter-spacing: 0.5px;
-      color: var(--orange);
-    }
-    .hero-day-num {
-      font-family: var(--font-head);
-      font-weight: 900;
-      font-size: 86px;
-      line-height: 0.92;
-      color: var(--orange);
-      letter-spacing: -2px;
-    }
-    .hero-day-label {
-      font-size: 10px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--brown);
-      margin-top: 8px;
-      font-weight: 600;
-    }
-    .hero-date {
+    .header-title {
       font-family: var(--font-head);
       font-weight: 700;
       font-size: 16px;
-      color: var(--dark);
-      margin-top: 12px;
+      color: #fff;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
     }
-    .hero-progress {
-      margin-top: 16px;
-      height: 5px;
-      background: rgba(140,94,60,0.14);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-    .hero-progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--orange), var(--crimson));
-      border-radius: 3px;
-      transition: width 1s ease;
-    }
-    .hero-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-top: 8px;
-    }
-    .hero-pct {
-      font-family: var(--font-head);
-      font-weight: 700;
+    /* soft, warm, never alarming */
+    .header-left {
+      text-align: right;
       font-size: 12px;
-      color: var(--orange);
+      line-height: 1.35;
+      color: rgba(255,236,214,0.62);
+      font-weight: 400;
     }
-    .hero-remaining {
-      font-size: 11px;
-      color: var(--light);
-    }
-    .hero-quote {
-      margin-top: 16px;
-      padding-top: 14px;
-      border-top: 1px dashed var(--border);
-      font-size: 12.5px;
-      font-style: italic;
-      color: var(--mid);
-      line-height: 1.7;
+    .header-left b {
+      font-weight: 600;
+      color: rgba(255,236,214,0.9);
     }
 
-    /* Practice Form */
-    .practices {
-      padding: 20px 24px;
-      flex: 1;
+    /* ─── Single calm column ─────────────────────────── */
+    .stage {
+      display: flex;
+      justify-content: center;
+      padding: 30px 18px calc(40px + env(safe-area-inset-bottom));
     }
-    .section-label {
+    .card {
+      width: 100%;
+      max-width: 460px;
+    }
+
+    .greeting {
       font-family: var(--font-head);
       font-weight: 700;
-      font-size: 10px;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      color: var(--light);
+      font-size: 26px;
+      color: var(--dark);
+      letter-spacing: -0.3px;
     }
-    .practices-head {
+    .today-date {
+      font-size: 14.5px;
+      color: var(--mid);
+      margin-top: 6px;
+      margin-bottom: 26px;
+    }
+
+    /* ─── Practice cards (tap to complete) ───────────── */
+    .practices { display: flex; flex-direction: column; gap: 12px; }
+
+    .pcard {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-    }
-    .streak-badge {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 3px 9px 3px 6px;
-      background: rgba(236,103,27,0.10);
-      border-radius: 20px;
-      font-family: var(--font-head);
-      font-weight: 700;
-      font-size: 11px;
-      color: var(--orange);
-    }
-    .streak-flame { width: 14px; height: 14px; color: var(--orange); }
-    .practice-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 0;
-      border-bottom: 1px solid var(--muted);
-    }
-    .practice-row:last-child { border-bottom: none; }
-    .practice-row.tappable {
-      cursor: pointer;
-      margin: 0 -12px;
-      padding-left: 12px;
-      padding-right: 12px;
-      border-radius: 10px;
+      gap: 14px;
+      padding: 17px 18px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
       -webkit-tap-highlight-color: transparent;
-      transition: background 0.15s;
+      transition: background 0.22s, border-color 0.22s, transform 0.12s;
     }
-    .practice-row.tappable:active { background: var(--muted); }
-    .practice-row:has(input:checked) .pname { color: var(--orange); }
-    .prow-main { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .pcard.tap { cursor: pointer; }
+    .pcard.tap:active { transform: scale(0.985); }
+
+    .pcard.s-surya     { --pc: var(--orange); }
+    .pcard.s-shambhavi { --pc: var(--crimson); }
+    .pcard.s-bhuta     { --pc: var(--blue); }
+    .pcard.s-devi      { --pc: var(--brown); }
+
+    /* done = warm, filled, glad — never a grey toggle */
+    .pcard.done {
+      border-color: color-mix(in srgb, var(--pc) 42%, var(--border));
+      background: color-mix(in srgb, var(--pc) 9%, var(--card));
+    }
+
     .pglyph {
-      width: 26px; height: 26px;
+      width: 30px; height: 30px;
       flex-shrink: 0;
-      color: var(--light);
-      transition: color 0.25s, transform 0.2s;
+      color: var(--pc);
+      transition: transform 0.2s;
     }
-    .pglyph.s-surya     { color: var(--orange); }
-    .pglyph.s-shambhavi { color: var(--crimson); }
-    .pglyph.s-bhuta     { color: var(--blue); }
-    .pglyph.s-devi      { color: var(--brown); }
-    /* glyph pops when its practice is toggled on */
-    .practice-row:has(input:checked) .pglyph { transform: scale(1.12); }
+    .pcard.done .pglyph { transform: scale(1.08); }
+
+    .pmeta { flex: 1; min-width: 0; }
     .pname {
       font-family: var(--font-head);
       font-weight: 700;
-      font-size: 14.5px;
-      transition: color 0.2s;
+      font-size: 15.5px;
+      color: var(--dark);
     }
     .pdesc {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--light);
       margin-top: 2px;
     }
 
-    /* Cycle counter */
-    .cycle-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
-    .cycle-row  { display: flex; align-items: center; gap: 8px; }
-    .cbtn {
+    /* completion ring on the right (inviting, not a switch) */
+    .pcheck {
       width: 28px; height: 28px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      border: 2px solid color-mix(in srgb, var(--pc) 32%, var(--border));
+      position: relative;
+      transition: all 0.22s;
+    }
+    .pcard.done .pcheck {
+      background: var(--pc);
+      border-color: var(--pc);
+      animation: pop 0.32s ease;
+    }
+    .pcard.done .pcheck::after {
+      content: '✓';
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 15px; font-weight: 700;
+    }
+    @keyframes pop {
+      0% { transform: scale(0.7); }
+      55% { transform: scale(1.18); }
+      100% { transform: scale(1); }
+    }
+
+    /* Surya cycle counter (kept — useful in-session info) */
+    .counter { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
+    .cbtn {
+      width: 32px; height: 32px;
       border: 1.5px solid var(--border);
       background: transparent;
       border-radius: 50%;
-      font-size: 17px;
-      line-height: 1;
+      font-size: 18px; line-height: 1;
       color: var(--mid);
       display: flex; align-items: center; justify-content: center;
       transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
     }
-    .cbtn:hover { border-color: var(--orange); color: var(--orange); }
+    .cbtn:active { background: var(--muted); }
     .cval {
       font-family: var(--font-head);
       font-weight: 900;
       font-size: 22px;
-      width: 24px;
+      width: 22px;
       text-align: center;
       color: var(--orange);
     }
-    .cdots { display: flex; gap: 5px; }
-    .cdot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--muted);
-      transition: background 0.2s;
-    }
-    .cdot.on { background: var(--orange); }
 
-    /* Toggle */
-    .toggle { position: relative; width: 50px; height: 27px; flex-shrink: 0; }
-    .toggle input { opacity: 0; width: 0; height: 0; }
-    .tslider {
-      position: absolute; inset: 0;
-      background: var(--muted);
-      border-radius: 27px;
-      cursor: pointer;
-      transition: background 0.25s;
-    }
-    .tslider::before {
-      content: '';
-      position: absolute;
-      width: 19px; height: 19px;
-      left: 4px; bottom: 4px;
-      background: #fff;
-      border-radius: 50%;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.18);
-      transition: transform 0.25s;
-    }
-    .toggle input:checked + .tslider { background: var(--orange); }
-    .toggle input:checked + .tslider::before { transform: translateX(23px); animation: knobPop 0.3s ease; }
-    @keyframes knobPop {
-      0%   { transform: translateX(23px) scale(1); }
-      50%  { transform: translateX(23px) scale(1.25); }
-      100% { transform: translateX(23px) scale(1); }
-    }
-
-    /* Save section */
-    .save-area {
-      padding: 16px 24px 24px;
-      border-top: 1px solid var(--muted);
-    }
-    .save-btn {
+    /* ─── CTA ─────────────────────────────────────────── */
+    .cta-wrap { margin-top: 28px; }
+    .cta {
       width: 100%;
-      padding: 13px;
+      padding: 17px;
       background: var(--orange);
       color: #fff;
       border: none;
       border-radius: var(--radius);
       font-family: var(--font-head);
       font-weight: 700;
-      font-size: 13px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      transition: all 0.2s;
+      font-size: 15px;
+      letter-spacing: 0.3px;
+      transition: background 0.2s, transform 0.12s, box-shadow 0.2s;
     }
-    .save-btn:hover:not(:disabled) {
-      background: #D45B13;
-      box-shadow: 0 4px 16px rgba(236,103,27,0.35);
-      transform: translateY(-1px);
-    }
-    .save-btn:active:not(:disabled) { transform: none; }
-    .save-btn.pulse { animation: savePulse 0.5s ease; }
-    @keyframes savePulse {
-      0%   { transform: scale(1); }
-      40%  { transform: scale(1.03); box-shadow: 0 6px 22px rgba(236,103,27,0.4); }
-      100% { transform: scale(1); }
-    }
-    .save-btn:disabled {
+    .cta:not(:disabled):active { transform: scale(0.99); }
+    .cta:not(:disabled) { box-shadow: 0 6px 20px rgba(236,103,27,0.28); }
+    .cta:disabled {
       background: var(--muted);
       color: var(--light);
       cursor: default;
     }
+    .cta.pulse { animation: ctaPulse 0.5s ease; }
+    @keyframes ctaPulse {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.025); }
+      100% { transform: scale(1); }
+    }
     .save-msg {
-      margin-top: 8px;
+      margin-top: 12px;
       text-align: center;
-      font-size: 12px;
+      font-size: 13px;
+      min-height: 18px;
       color: var(--light);
-      min-height: 16px;
     }
-    .save-msg.ok  { color: var(--success); }
-    .save-msg.err { color: var(--crimson); }
+    .save-msg.ok  { color: var(--success); font-weight: 600; }
+    .save-msg.err { color: var(--terracotta); font-weight: 600; }
 
-    /* ─── Right Panel: Tracker ───────────────────────── */
-    .tracker-panel {
-      padding: 28px 28px 40px;
-      overflow-y: auto;
-    }
-    .tracker-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-    .tracker-title {
-      font-family: var(--font-head);
-      font-weight: 700;
-      font-size: 19px;
-    }
-    .tracker-sub {
-      font-size: 12px;
-      color: var(--light);
-      margin-top: 2px;
-    }
-
-    /* Stats row */
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 22px;
-    }
-    .stat {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px 14px 12px;
-      box-shadow: var(--shadow);
-    }
-    .stat-num {
-      font-family: var(--font-head);
-      font-weight: 900;
-      font-size: 26px;
-      line-height: 1;
-    }
-    .stat-lbl {
-      font-size: 10px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--light);
-      margin-top: 4px;
-    }
-
-    /* Legend */
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-    .leg-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11.5px;
-      color: var(--mid);
-    }
-    .leg-item .pglyph { width: 18px; height: 18px; }
-
-    /* Grid */
-    .days-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
-      gap: 8px;
-    }
-    .day-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 9px 7px 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-    .day-card:hover:not(.future) {
-      border-color: var(--orange);
-      box-shadow: 0 3px 10px rgba(236,103,27,0.15);
-      transform: translateY(-1px);
-    }
-    .day-card.today {
-      border-color: var(--orange);
-      border-width: 2px;
-    }
-    .day-card.today::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: var(--orange);
-    }
-    .day-card.future {
-      opacity: 0.38;
-      cursor: default;
-      pointer-events: none;
-    }
-    .day-card.logged { background: #FCF8F1; }
-    .day-card.complete {
-      background: linear-gradient(160deg, #FCEFE0, #FBF6EE);
-      border-color: rgba(236,103,27,0.35);
-    }
-    .day-card.complete .dc-num::after {
-      content: '✦';
-      font-size: 8px;
-      color: var(--orange);
-      margin-left: 3px;
-      vertical-align: top;
-    }
-    /* Milestone days (21/40/48/90/111) get a small corner mark */
-    .day-card.milestone::before {
-      content: '✦';
-      position: absolute;
-      top: 4px; right: 5px;
-      font-size: 9px;
-      color: var(--crimson);
-      opacity: 0.65;
-      z-index: 1;
-    }
-    .dc-num {
-      font-family: var(--font-head);
-      font-weight: 700;
-      font-size: 15px;
-      text-align: center;
-      line-height: 1;
-    }
-    .dc-date {
-      font-size: 9px;
-      color: var(--light);
-      text-align: center;
-      margin: 2px 0 7px;
-    }
-    .dc-glyphs {
-      display: flex;
-      justify-content: center;
-      gap: 4px;
-    }
-    .dcg {
-      width: 14px; height: 14px;
-      color: rgba(140,94,60,0.22);
-      transition: color 0.2s;
-    }
-    .dcg.on.s-surya     { color: var(--orange); }
-    .dcg.on.s-shambhavi { color: var(--crimson); }
-    .dcg.on.s-bhuta     { color: var(--blue); }
-    .dcg.on.s-devi      { color: var(--brown); }
-
-    /* Loading */
-    .spinner-wrap {
-      display: flex; align-items: center; gap: 10px;
-      color: var(--light); font-size: 13px;
-      padding: 40px 0;
-    }
-    .spin {
-      width: 18px; height: 18px;
-      border: 2px solid var(--muted);
-      border-top-color: var(--orange);
-      border-radius: 50%;
-      animation: spin 0.75s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ─── Modal ──────────────────────────────────────── */
-    .overlay {
-      display: none;
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.45);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      backdrop-filter: blur(2px);
-    }
-    .overlay.open { display: flex; }
-    .modal {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 28px;
-      width: 360px;
-      max-width: 100%;
-      box-shadow: var(--shadow-lg);
-      position: relative;
-    }
-    .modal-close {
-      position: absolute; top: 18px; right: 18px;
-      background: var(--muted); border: none;
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      font-size: 16px;
-      color: var(--mid);
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.15s;
-    }
-    .modal-close:hover { background: var(--border); }
-    .modal-title {
-      font-family: var(--font-head);
-      font-weight: 700;
-      font-size: 20px;
-      margin-bottom: 2px;
-    }
-    .modal-date {
-      font-size: 12px;
-      color: var(--light);
-      margin-bottom: 20px;
-    }
-    .modal-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 11px 0;
-      border-bottom: 1px solid var(--muted);
-    }
-    .modal-row:last-child { border-bottom: none; }
-    .modal-practice { font-family: var(--font-head); font-weight: 700; font-size: 14px; }
-    .modal-val { font-size: 12px; margin-top: 2px; }
-    .modal-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-    }
-
-    /* Pre-journey / Post-journey states */
-    .journey-state {
-      padding: 28px;
-      text-align: center;
-    }
-    .state-emoji { font-size: 40px; margin-bottom: 12px; }
-    .state-title {
-      font-family: var(--font-head);
-      font-weight: 700;
-      font-size: 20px;
-      margin-bottom: 8px;
-    }
-    .state-sub { font-size: 14px; color: var(--light); line-height: 1.6; }
-
-    /* ─── Responsive ─────────────────────────────────── */
-    @media (max-width: 900px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-      .today-panel {
-        position: static;
-        height: auto;
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-      }
-      .stats { grid-template-columns: repeat(2, 1fr); }
-
-      /* Bigger thumb targets */
-      .practice-row { padding: 16px 0; }
-      .practice-row.tappable { padding-left: 12px; padding-right: 12px; }
-      .toggle { width: 54px; height: 30px; }
-      .toggle input:checked + .tslider::before { transform: translateX(24px); }
-      .tslider::before { width: 22px; height: 22px; }
-      .cbtn { width: 38px; height: 38px; font-size: 20px; }
-      .cval { font-size: 24px; width: 28px; }
-
-      /* Sticky save bar so it's always reachable */
-      .save-area {
-        position: sticky;
-        bottom: 0;
-        background: var(--card);
-        box-shadow: 0 -6px 20px rgba(90,60,30,0.08);
-        z-index: 10;
-        padding-bottom: max(20px, env(safe-area-inset-bottom));
-      }
-      .save-btn { padding: 16px; font-size: 14px; }
-    }
     @media (max-width: 600px) {
-      .header { padding: 0 16px; height: 58px; }
-      .header-name { font-size: 15px; }
-      .header-day { font-size: 26px; }
-      .hero { padding: 22px 20px 22px; }
-      .hero-day-num { font-size: 66px; }
-      .mandala { width: 90px; height: 90px; }
-      .practices { padding: 16px 20px; }
-      .save-area { padding: 14px 20px 18px; }
-      .tracker-panel { padding: 22px 16px 36px; }
-      .days-grid { grid-template-columns: repeat(auto-fill, minmax(62px, 1fr)); gap: 7px; }
-      .stat-num { font-size: 22px; }
-      .legend { gap: 10px 14px; }
+      .greeting { font-size: 23px; }
+      .header-title { font-size: 15px; }
     }
   </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════ GLYPH DEFS (earthy line icons) -->
+<!-- ── Glyph defs (earthy line icons) ── -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <!-- Surya Kriya — sun -->
   <symbol id="g-surya" viewBox="0 0 24 24">
     <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6"/>
     <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
@@ -782,12 +280,10 @@
       <line x1="18.7" y1="5.3" x2="17" y2="7"/><line x1="7" y1="17" x2="5.3" y2="18.7"/>
     </g>
   </symbol>
-  <!-- Shambhavi — third eye -->
   <symbol id="g-shambhavi" viewBox="0 0 24 24">
     <path d="M3 12 C7 6.5, 17 6.5, 21 12 C17 17.5, 7 17.5, 3 12 Z" fill="none" stroke="currentColor" stroke-width="1.5"/>
     <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
   </symbol>
-  <!-- Bhuta Shuddhi — five elements -->
   <symbol id="g-bhuta" viewBox="0 0 24 24">
     <g fill="currentColor">
       <circle cx="12" cy="5" r="1.8"/><circle cx="18.66" cy="9.84" r="1.8"/>
@@ -795,289 +291,105 @@
       <circle cx="5.34" cy="9.84" r="1.8"/>
     </g>
   </symbol>
-  <!-- Devi Sadhana — Shakti triangle -->
   <symbol id="g-devi" viewBox="0 0 24 24">
     <path d="M4 6.5 L20 6.5 L12 20 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
     <circle cx="12" cy="11" r="1.7" fill="currentColor"/>
   </symbol>
-  <!-- Flame — streak -->
   <symbol id="g-flame" viewBox="0 0 24 24">
     <path d="M12 3 C12 3 7 8 7 13 C7 16.3 9.2 18.5 12 18.5 C14.8 18.5 17 16.3 17 13 C17 8 12 3 12 3 Z" fill="currentColor"/>
   </symbol>
 </svg>
 
-<!-- ═══════════════════════════════════════════════════ HEADER -->
-<header class="header">
+<!-- ── Header ── -->
+<header class="header" id="header">
   <div class="header-brand">
     <div class="header-icon">
-      <!-- Flame symbol -->
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d="M10 2.5C10 2.5 5.5 7 5.5 11.5C5.5 14.04 7.52 16 10 16C12.48 16 14.5 14.04 14.5 11.5C14.5 7 10 2.5 10 2.5Z" fill="white" opacity="0.92"/>
-        <path d="M10 9C10 9 8 11 8 12.5C8 13.33 8.9 14 10 14C11.1 14 12 13.33 12 12.5C12 11 10 9 10 9Z" fill="white" opacity="0.5"/>
-      </svg>
+      <svg width="17" height="17" viewBox="0 0 24 24"><use href="#g-flame" fill="#fff"/></svg>
     </div>
-    <div>
-      <div class="header-name">111 Days Sadhana</div>
-      <div class="header-sub">Isha Foundation · Inner Engineering</div>
-    </div>
+    <div class="header-title">Today's Practice</div>
   </div>
-  <div class="header-counter">
-    <div class="header-day" id="hdr-day">—</div>
-    <div class="header-of">of 111 days</div>
-  </div>
+  <div class="header-left" id="header-left">&nbsp;</div>
 </header>
 
-<!-- ═══════════════════════════════════════════════════ LAYOUT -->
-<div class="layout">
+<!-- ── Today ── -->
+<main class="stage">
+  <div class="card">
+    <div class="greeting" id="greeting">&nbsp;</div>
+    <div class="today-date" id="today-date">&nbsp;</div>
 
-  <!-- ── LEFT: Today ──────────────────────────────── -->
-  <aside class="today-panel" id="today-panel">
-
-    <div class="hero" id="hero-section">
-      <div class="hero-greeting" id="hero-greeting">&nbsp;</div>
-
-      <div class="hero-top">
-        <div class="hero-left">
-          <div class="hero-day-num" id="hero-num">—</div>
-          <div class="hero-day-label">Day of Practice</div>
-          <div class="hero-milestone" id="hero-milestone" hidden></div>
+    <div class="practices">
+      <!-- Surya Kriya — keeps its cycle counter -->
+      <div class="pcard s-surya" id="pc-surya">
+        <svg class="pglyph"><use href="#g-surya"/></svg>
+        <div class="pmeta">
+          <div class="pname">Surya Kriya</div>
+          <div class="pdesc">Number of cycles</div>
         </div>
-
-        <!-- Live practice-mandala: each quadrant of 3 rays = one practice -->
-        <div class="mandala-wrap">
-          <svg class="mandala" id="mandala" viewBox="0 0 200 200" aria-hidden="true">
-            <circle class="m-core" id="m-core" cx="100" cy="100" r="34"/>
-            <circle class="m-disc" cx="100" cy="100" r="34"/>
-            <circle class="m-dots" cx="100" cy="100" r="24"/>
-            <!-- Surya quadrant (orange) -->
-            <g class="m-ray" id="ray-surya" data-color="var(--orange)">
-              <line x1="140" y1="100" x2="158" y2="100"/>
-              <line x1="134.64" y1="120" x2="150.23" y2="129"/>
-              <line x1="120" y1="134.64" x2="129" y2="150.23"/>
-            </g>
-            <!-- Shambhavi quadrant (crimson) -->
-            <g class="m-ray" id="ray-shambhavi" data-color="var(--crimson)">
-              <line x1="100" y1="140" x2="100" y2="158"/>
-              <line x1="80" y1="134.64" x2="71" y2="150.23"/>
-              <line x1="65.36" y1="120" x2="49.77" y2="129"/>
-            </g>
-            <!-- Bhuta Shuddhi quadrant (blue) -->
-            <g class="m-ray" id="ray-bhuta" data-color="var(--blue)">
-              <line x1="60" y1="100" x2="42" y2="100"/>
-              <line x1="65.36" y1="80" x2="49.77" y2="71"/>
-              <line x1="80" y1="65.36" x2="71" y2="49.77"/>
-            </g>
-            <!-- Devi quadrant (brown) -->
-            <g class="m-ray" id="ray-devi" data-color="var(--brown)">
-              <line x1="100" y1="60" x2="100" y2="42"/>
-              <line x1="120" y1="65.36" x2="129" y2="49.77"/>
-              <line x1="134.64" y1="80" x2="150.23" y2="71"/>
-            </g>
-          </svg>
-          <div class="mandala-meter">
-            <span class="mm-dot" id="mm-1"></span>
-            <span class="mm-dot" id="mm-2"></span>
-            <span class="mm-dot" id="mm-3"></span>
-            <span class="mm-dot" id="mm-4"></span>
-            <span class="mm-label" id="mm-label">0 of 4</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="hero-date" id="hero-date">—</div>
-
-      <div class="hero-progress">
-        <div class="hero-progress-fill" id="hero-prog" style="width:0%"></div>
-      </div>
-      <div class="hero-meta">
-        <span class="hero-pct" id="hero-pct">0%</span>
-        <span class="hero-remaining" id="hero-remaining">—</span>
-      </div>
-
-      <div class="hero-quote" id="hero-quote">&nbsp;</div>
-    </div>
-
-    <!-- Practice form -->
-    <div class="practices" id="practice-form">
-      <div class="practices-head">
-        <div class="section-label">Today's Practices</div>
-        <div class="streak-badge" id="streak-badge" hidden>
-          <svg class="streak-flame"><use href="#g-flame"/></svg>
-          <span id="streak-text">0</span>
-        </div>
-      </div>
-
-      <!-- Surya Kriya -->
-      <div class="practice-row">
-        <div class="prow-main">
-          <svg class="pglyph s-surya"><use href="#g-surya"/></svg>
-          <div>
-            <div class="pname">Surya Kriya</div>
-            <div class="pdesc">Number of cycles</div>
-          </div>
-        </div>
-        <div class="cycle-wrap">
-          <div class="cycle-row">
-            <button class="cbtn" onclick="adjCycles(-1)" aria-label="Decrease">−</button>
-            <div class="cval" id="cval">0</div>
-            <button class="cbtn" onclick="adjCycles(1)"  aria-label="Increase">+</button>
-          </div>
-          <div class="cdots">
-            <div class="cdot" id="cd1"></div>
-            <div class="cdot" id="cd2"></div>
-            <div class="cdot" id="cd3"></div>
-          </div>
+        <div class="counter">
+          <button class="cbtn" onclick="adjCycles(-1)" aria-label="One fewer cycle">−</button>
+          <span class="cval" id="cval">0</span>
+          <button class="cbtn" onclick="adjCycles(1)" aria-label="One more cycle">+</button>
         </div>
       </div>
 
       <!-- Shambhavi -->
-      <label class="practice-row tappable">
-        <div class="prow-main">
-          <svg class="pglyph s-shambhavi"><use href="#g-shambhavi"/></svg>
-          <div>
-            <div class="pname">Shambhavi Mahamudra</div>
-            <div class="pdesc">21-min kriya</div>
-          </div>
+      <div class="pcard tap s-shambhavi" id="pc-shambhavi" onclick="toggleP('shambhavi')">
+        <svg class="pglyph"><use href="#g-shambhavi"/></svg>
+        <div class="pmeta">
+          <div class="pname">Shambhavi Mahamudra</div>
+          <div class="pdesc">21-min kriya</div>
         </div>
-        <span class="toggle">
-          <input type="checkbox" id="t-shambhavi">
-          <span class="tslider"></span>
-        </span>
-      </label>
+        <span class="pcheck"></span>
+      </div>
 
       <!-- Bhuta Shuddhi -->
-      <label class="practice-row tappable">
-        <div class="prow-main">
-          <svg class="pglyph s-bhuta"><use href="#g-bhuta"/></svg>
-          <div>
-            <div class="pname">Bhuta Shuddhi</div>
-            <div class="pdesc">Elemental purification</div>
-          </div>
+      <div class="pcard tap s-bhuta" id="pc-bhuta" onclick="toggleP('bhuta')">
+        <svg class="pglyph"><use href="#g-bhuta"/></svg>
+        <div class="pmeta">
+          <div class="pname">Bhuta Shuddhi</div>
+          <div class="pdesc">Elemental purification</div>
         </div>
-        <span class="toggle">
-          <input type="checkbox" id="t-bhuta">
-          <span class="tslider"></span>
-        </span>
-      </label>
+        <span class="pcheck"></span>
+      </div>
 
       <!-- Devi Sadhana -->
-      <label class="practice-row tappable">
-        <div class="prow-main">
-          <svg class="pglyph s-devi"><use href="#g-devi"/></svg>
-          <div>
-            <div class="pname">Devi Sadhana</div>
-            <div class="pdesc">Linga Bhairavi offering</div>
-          </div>
+      <div class="pcard tap s-devi" id="pc-devi" onclick="toggleP('devi')">
+        <svg class="pglyph"><use href="#g-devi"/></svg>
+        <div class="pmeta">
+          <div class="pname">Devi Sadhana</div>
+          <div class="pdesc">Linga Bhairavi offering</div>
         </div>
-        <span class="toggle">
-          <input type="checkbox" id="t-devi">
-          <span class="tslider"></span>
-        </span>
-      </label>
+        <span class="pcheck"></span>
+      </div>
     </div>
 
-    <div class="save-area">
-      <button class="save-btn" id="save-btn" onclick="saveToday()">
-        Save Today's Practice
-      </button>
+    <div class="cta-wrap">
+      <button class="cta" id="cta" onclick="saveToday()" disabled>I'm done for today</button>
       <div class="save-msg" id="save-msg"></div>
     </div>
-
-  </aside>
-
-  <!-- ── RIGHT: Tracker ───────────────────────────── -->
-  <main class="tracker-panel">
-
-    <div class="tracker-head">
-      <div>
-        <div class="tracker-title">111-Day Journey</div>
-        <div class="tracker-sub" id="tracker-range">—</div>
-      </div>
-    </div>
-
-    <!-- Stats -->
-    <div class="stats">
-      <div class="stat">
-        <div class="stat-num" id="st-done" style="color:var(--orange)">0</div>
-        <div class="stat-lbl">Days Logged</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num" id="st-streak" style="color:var(--blue)">0</div>
-        <div class="stat-lbl">Current Streak</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num" id="st-shambhavi" style="color:var(--crimson)">0%</div>
-        <div class="stat-lbl">Shambhavi</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num" id="st-surya" style="color:var(--brown)">0</div>
-        <div class="stat-lbl">Surya Cycles</div>
-      </div>
-    </div>
-
-    <!-- Legend -->
-    <div class="legend">
-      <div class="leg-item"><svg class="pglyph s-surya"><use href="#g-surya"/></svg>Surya Kriya</div>
-      <div class="leg-item"><svg class="pglyph s-shambhavi"><use href="#g-shambhavi"/></svg>Shambhavi</div>
-      <div class="leg-item"><svg class="pglyph s-bhuta"><use href="#g-bhuta"/></svg>Bhuta Shuddhi</div>
-      <div class="leg-item"><svg class="pglyph s-devi"><use href="#g-devi"/></svg>Devi Sadhana</div>
-    </div>
-
-    <!-- Grid -->
-    <div class="days-grid" id="days-grid">
-      <div class="spinner-wrap">
-        <div class="spin"></div> Loading…
-      </div>
-    </div>
-
-  </main>
-</div>
-
-<!-- ═══════════════════════════════════════════════════ MODAL -->
-<div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
-  <div class="modal" role="dialog" aria-modal="true">
-    <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
-    <div class="modal-title" id="m-title">Day 1</div>
-    <div class="modal-date"  id="m-date"></div>
-    <div id="m-body"></div>
   </div>
-</div>
+</main>
 
 <!-- ═══════════════════════════════════════════════════ SCRIPT -->
 <script>
 /* ============================================================
-   CONFIG — edit these two values before deploying
+   CONFIG
    ============================================================ */
 const CFG = {
-  START_DATE: '2026-06-10',       // First day of 111-day journey (YYYY-MM-DD)
-  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzZDXZzoJxqRMBK3hfYphg07ThIyNKclR5jyRpP7wLmxK7A6PzCuKMJDsdRFVuAoHwl/exec',  // Paste your deployed Apps Script URL here
+  START_DATE: '2026-06-10',
+  TOTAL_DAYS: 111,
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzZDXZzoJxqRMBK3hfYphg07ThIyNKclR5jyRpP7wLmxK7A6PzCuKMJDsdRFVuAoHwl/exec',
 };
-
-/* ============================================================
-   QUOTES (Sadhguru)
-   ============================================================ */
-const QUOTES = [
-  "The most powerful thing you can do is turn inward.",
-  "Yoga means to be in perfect tune with existence.",
-  "Your life is your karma — make it a conscious creation.",
-  "Inner engineering is the technology of turning inward.",
-  "Stillness is not stagnation — it is the source of all movement.",
-  "The seat of your experience is within you.",
-  "If you are willing to strive, life can be a tremendous possibility.",
-  "Every moment is an opportunity to transform.",
-  "The quality of your life is determined by how you are within yourself.",
-  "What you do is not the point — how you are is the point.",
-  "You are not in the universe — the universe is in you.",
-  "The mind is a powerful instrument; every thought, every emotion shapes your reality.",
-  "Sadhana is not a path to some other place — it is a path to yourself.",
-];
 
 /* ============================================================
    STATE
    ============================================================ */
 const S = {
   cycles: 0,
-  data:   {},   // { 'YYYY-MM-DD': { cycles, shambhavi, bhuta, devi } }
+  shambhavi: false,
+  bhuta: false,
+  devi: false,
+  data: {},        // { 'YYYY-MM-DD': { cycles, shambhavi, bhuta, devi } }
   todayKey: '',
 };
 
@@ -1098,178 +410,99 @@ function todayKey() { return toKey(new Date()); }
 function dayNum(key) {
   return Math.round((parseLocal(key) - parseLocal(CFG.START_DATE)) / 864e5) + 1;
 }
-function displayDate(date) {
-  return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-}
-function shortDate(date) {
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
 
 /* ============================================================
    INIT
    ============================================================ */
 function init() {
   S.todayKey = todayKey();
-  const num   = dayNum(S.todayKey);
-  const total = 111;
-  const pct   = Math.max(0, Math.min(100, Math.round((num / total) * 100)));
-
-  // Header
-  const hdrNum = (num >= 1 && num <= total) ? num : (num < 1 ? '—' : total);
-  document.getElementById('hdr-day').textContent = hdrNum;
-
-  // Tracker date range
-  const end = new Date(parseLocal(CFG.START_DATE));
-  end.setDate(end.getDate() + 110);
-  document.getElementById('tracker-range').textContent =
-    shortDate(parseLocal(CFG.START_DATE)) + ' – ' + shortDate(end) + ' · 111 days';
-
-  const remaining = Math.max(0, total - num + 1);
-
-  if (num < 1) {
-    // Before journey starts
-    document.getElementById('hero-num').textContent = '—';
-    document.getElementById('hero-date').textContent = displayDate(new Date());
-    document.getElementById('hero-remaining').textContent =
-      'Begins ' + shortDate(parseLocal(CFG.START_DATE));
-    document.getElementById('hero-quote').textContent =
-      '“Journey begins ' + displayDate(parseLocal(CFG.START_DATE)) + '”';
-    document.getElementById('practice-form').style.opacity = '0.4';
-    document.getElementById('practice-form').style.pointerEvents = 'none';
-    document.getElementById('save-btn').disabled = true;
-    document.getElementById('save-msg').textContent = 'Journey begins soon!';
-  } else if (num > total) {
-    // Journey complete
-    document.getElementById('hero-num').textContent = '✓';
-    document.getElementById('hero-date').textContent = '111-Day Journey Complete';
-    document.getElementById('hero-remaining').textContent = 'All days done';
-    document.getElementById('hero-quote').textContent = '“Well done. Now carry it forward.”';
-    document.getElementById('practice-form').style.opacity = '0.4';
-    document.getElementById('practice-form').style.pointerEvents = 'none';
-    document.getElementById('save-btn').disabled = true;
-  } else {
-    // Active day
-    document.getElementById('hero-num').textContent = num;
-    document.getElementById('hero-date').textContent = displayDate(new Date());
-    document.getElementById('hero-remaining').textContent =
-      remaining + ' day' + (remaining === 1 ? '' : 's') + ' to go';
-    document.getElementById('hero-quote').textContent =
-      '“' + QUOTES[num % QUOTES.length] + '”';
-  }
+  const now  = new Date();
 
   // Greeting (time-aware)
-  const h = new Date().getHours();
+  const h = now.getHours();
   const greet = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
-  document.getElementById('hero-greeting').textContent = greet;
+  document.getElementById('greeting').textContent = greet;
 
-  // Milestone badge
-  const MILESTONES = [21, 40, 48, 90, 111];
-  const mEl = document.getElementById('hero-milestone');
-  if (num >= 1 && num <= total && MILESTONES.includes(num)) {
-    mEl.textContent = '✦ ' + num + '-day mark';
-    mEl.hidden = false;
+  // Date — clean, warm, present (no day numbers, no program framing)
+  document.getElementById('today-date').textContent =
+    now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+  // Soft countdown, top-right
+  const num  = dayNum(S.todayKey);
+  const left = CFG.TOTAL_DAYS - num + 1;
+  const el   = document.getElementById('header-left');
+  if (num < 1) {
+    const until = 1 - num;
+    el.innerHTML = `begins in <b>${until}</b> day${until === 1 ? '' : 's'}`;
+  } else if (num > CFG.TOTAL_DAYS) {
+    el.innerHTML = 'Devi sadhana complete';
+  } else {
+    el.innerHTML = `<b>${left}</b> day${left === 1 ? '' : 's'} left for Devi`;
   }
-
-  // Progress bar + percent
-  document.getElementById('hero-pct').textContent  = pct + '%';
-  document.getElementById('hero-prog').style.width = pct + '%';
-
-  // Header progress stripe
-  document.querySelector('.header').style.setProperty('--hprog', pct + '%');
-
-  // Scroll-aware header shadow
-  window.addEventListener('scroll', () => {
-    document.querySelector('.header').classList.toggle('scrolled', window.scrollY > 16);
-  }, { passive: true });
-
-  // Live mandala reacts as you log
-  ['t-shambhavi', 't-bhuta', 't-devi'].forEach(id => {
-    document.getElementById(id).addEventListener('change', () => {
-      buzz(10);
-      updateTodayVisual();
-    });
-  });
-  updateTodayVisual();
 
   loadData();
 }
 
 /* ============================================================
-   LIVE TODAY VISUAL — mandala quadrants + completion meter
+   PRACTICE INTERACTIONS
    ============================================================ */
-function updateTodayVisual() {
-  const on = {
-    surya:     S.cycles >= 1,
-    shambhavi: document.getElementById('t-shambhavi').checked,
-    bhuta:     document.getElementById('t-bhuta').checked,
-    devi:      document.getElementById('t-devi').checked,
-  };
-  document.getElementById('ray-surya').classList.toggle('on', on.surya);
-  document.getElementById('ray-shambhavi').classList.toggle('on', on.shambhavi);
-  document.getElementById('ray-bhuta').classList.toggle('on', on.bhuta);
-  document.getElementById('ray-devi').classList.toggle('on', on.devi);
-
-  const count = [on.surya, on.shambhavi, on.bhuta, on.devi].filter(Boolean).length;
-  for (let i = 1; i <= 4; i++)
-    document.getElementById('mm-' + i).classList.toggle('on', i <= count);
-  document.getElementById('mm-label').textContent = count + ' of 4';
-
-  const mandala  = document.getElementById('mandala');
-  const wasFull  = mandala.classList.contains('complete');
-  const isFull   = count === 4;
-  mandala.classList.toggle('complete', isFull);
-  if (isFull && !wasFull) buzz([10, 40, 10]);   // celebrate completing all four
+function toggleP(name) {
+  S[name] = !S[name];
+  buzz(10);
+  renderCards();
 }
 
-/* Haptic feedback (guarded — Android only, ignored elsewhere) */
-function buzz(pattern) {
-  try { if (navigator.vibrate) navigator.vibrate(pattern); } catch(e) {}
-}
-
-/* ============================================================
-   CYCLE COUNTER
-   ============================================================ */
 function adjCycles(d) {
   S.cycles = Math.max(0, Math.min(3, S.cycles + d));
-  document.getElementById('cval').textContent = S.cycles;
-  for (let i = 1; i <= 3; i++)
-    document.getElementById('cd' + i).classList.toggle('on', i <= S.cycles);
   buzz(10);
-  updateTodayVisual();
-}
-function setCycles(v) {
-  S.cycles = Math.max(0, Math.min(3, v));
-  document.getElementById('cval').textContent = S.cycles;
-  for (let i = 1; i <= 3; i++)
-    document.getElementById('cd' + i).classList.toggle('on', i <= S.cycles);
-  updateTodayVisual();
+  renderCards();
 }
 
+function renderCards() {
+  document.getElementById('cval').textContent = S.cycles;
+  setDone('pc-surya',     S.cycles >= 1);
+  setDone('pc-shambhavi', S.shambhavi);
+  setDone('pc-bhuta',     S.bhuta);
+  setDone('pc-devi',      S.devi);
+
+  // CTA activates once at least one practice is marked
+  const any = S.cycles >= 1 || S.shambhavi || S.bhuta || S.devi;
+  document.getElementById('cta').disabled = !any;
+}
+function setDone(id, on) {
+  document.getElementById(id).classList.toggle('done', !!on);
+}
+
+/* Haptic feedback (Android; ignored elsewhere) */
+function buzz(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch(e) {} }
+
 /* ============================================================
-   LOAD DATA
+   LOAD / SYNC
    ============================================================ */
 function loadData() {
-  // 1. Render instantly from localStorage cache (no waiting)
+  // Render instantly from local cache
   try {
     const stored = localStorage.getItem('sadhana-tracker-data');
     if (stored) S.data = JSON.parse(stored);
-  } catch(e) {
-    console.warn('Cache read failed:', e.message);
-  }
-  fillTodayForm();
-  renderGrid();
-  updateStats();
-
-  // 2. Sync from cloud in the background, then re-render
+  } catch(e) { console.warn('Cache read failed:', e.message); }
+  fillToday();
   syncFromCloud();
 }
 
-/* True if an entry actually records a practice (vs. an empty/blank row). */
+function fillToday() {
+  const td = S.data[S.todayKey];
+  if (td) {
+    S.cycles    = Number(td.cycles) || 0;
+    S.shambhavi = !!td.shambhavi;
+    S.bhuta     = !!td.bhuta;
+    S.devi      = !!td.devi;
+  }
+  renderCards();
+}
+
 function hasContent(o) {
   return !!o && (o.cycles > 0 || o.shambhavi || o.bhuta || o.devi);
 }
-
-/* Coerce any date shape (plain 'YYYY-MM-DD', ISO timestamp, Date) → local key. */
 function normalizeDate(v) {
   if (!v) return '';
   if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
@@ -1288,7 +521,6 @@ async function syncFromCloud() {
     rows.forEach(row => {
       let key, entry;
       if (Array.isArray(row)) {
-        // Canonical shape: [date, cycles, shambhavi, bhuta, devi]
         key = normalizeDate(row[0]);
         entry = {
           cycles:    Number(row[1]) || 0,
@@ -1297,7 +529,6 @@ async function syncFromCloud() {
           devi:      row[4] === true || row[4] === 'TRUE',
         };
       } else if (row && typeof row === 'object') {
-        // Legacy shape: { date, surya_cycles|cycles, shambhavi, bhuta, devi }
         key = normalizeDate(row.date);
         entry = {
           cycles:    Number(row.surya_cycles != null ? row.surya_cycles : row.cycles) || 0,
@@ -1307,9 +538,7 @@ async function syncFromCloud() {
         };
       }
       if (!key) return;
-      // Non-destructive merge: cloud wins only when it has real data, or when
-      // there's nothing logged locally. Never overwrite a logged local day
-      // with an empty cloud row.
+      // Non-destructive: never overwrite a logged local day with an empty cloud row
       if (hasContent(entry) || !hasContent(S.data[key])) {
         S.data[key] = entry;
         merged++;
@@ -1318,51 +547,33 @@ async function syncFromCloud() {
 
     if (merged) {
       localStorage.setItem('sadhana-tracker-data', JSON.stringify(S.data));
-      fillTodayForm();
-      renderGrid();
-      updateStats();
+      fillToday();
     }
   } catch(e) {
     console.log('Cloud offline — using cached data.', e.message);
   }
 }
 
-function fillTodayForm() {
-  const td = S.data[S.todayKey];
-  if (td) {
-    document.getElementById('t-shambhavi').checked = !!td.shambhavi;
-    document.getElementById('t-bhuta').checked     = !!td.bhuta;
-    document.getElementById('t-devi').checked      = !!td.devi;
-    setCycles(td.cycles || 0);  // setCycles() also refreshes the live mandala
-  }
-}
-
 /* ============================================================
-   SAVE DATA
+   SAVE
    ============================================================ */
 async function saveToday() {
-  const btn = document.getElementById('save-btn');
+  const btn = document.getElementById('cta');
   const msg = document.getElementById('save-msg');
 
   const entry = {
     date:      S.todayKey,
     cycles:    S.cycles,
-    shambhavi: document.getElementById('t-shambhavi').checked,
-    bhuta:     document.getElementById('t-bhuta').checked,
-    devi:      document.getElementById('t-devi').checked,
+    shambhavi: S.shambhavi,
+    bhuta:     S.bhuta,
+    devi:      S.devi,
   };
 
-  // Update in-memory + cache immediately (instant, always works)
+  // Local cache first — always works, the day is never lost
   S.data[S.todayKey] = entry;
-  try {
-    localStorage.setItem('sadhana-tracker-data', JSON.stringify(S.data));
-  } catch(e) {
-    console.warn('Cache write failed:', e.message);
-  }
-  renderGrid();
-  updateStats();
+  try { localStorage.setItem('sadhana-tracker-data', JSON.stringify(S.data)); }
+  catch(e) { console.warn('Cache write failed:', e.message); }
 
-  // Sync to Google Sheets
   if (CFG.SCRIPT_URL && CFG.SCRIPT_URL !== 'YOUR_APPS_SCRIPT_WEB_APP_URL') {
     btn.disabled = true;
     btn.textContent = 'Saving…';
@@ -1378,176 +589,47 @@ async function saveToday() {
       if (!j.success) throw new Error(j.error || 'Server returned: ' + raw.substring(0, 80));
       msg.className = 'save-msg ok';
       msg.textContent = 'Saved ✔';
-      celebrateSave(btn);
+      celebrate(btn);
     } catch(e) {
-      // Day is safe in localStorage — but show a visible warning, not fake success
-      msg.className = 'save-msg';
-      msg.style.cssText = 'color:var(--terracotta);font-weight:600';
-      msg.textContent = '✓ Local · cloud sync failed';
+      msg.className = 'save-msg err';
+      msg.textContent = '✓ Saved on device · cloud sync failed';
       console.warn('Cloud save failed. Check Apps Script deployment.', e.message);
     } finally {
       btn.disabled = false;
-      btn.textContent = "Save Today's Practice";
-      setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; msg.style.cssText = ''; }, 3500);
+      btn.textContent = "I'm done for today";
+      setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 3500);
     }
   } else {
     msg.className = 'save-msg ok';
     msg.textContent = 'Saved ✔';
-    celebrateSave(btn);
-    setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 2500);
+    celebrate(btn);
+    setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 3500);
   }
 }
 
-/* Save confirmation: button pulse + gentle haptic */
-function celebrateSave(btn) {
+function celebrate(btn) {
   btn.classList.remove('pulse');
-  void btn.offsetWidth;        // restart the animation
+  void btn.offsetWidth;
   btn.classList.add('pulse');
   buzz(15);
 }
 
 /* ============================================================
-   RENDER GRID
+   Header shadow on scroll (subtle)
    ============================================================ */
-function renderGrid() {
-  const grid = document.getElementById('days-grid');
-  grid.innerHTML = '';
-
-  const start    = parseLocal(CFG.START_DATE);
-  const todayStr = todayKey();
-
-  for (let i = 0; i < 111; i++) {
-    const date    = new Date(start);
-    date.setDate(date.getDate() + i);
-    const key  = toKey(date);
-    const num  = i + 1;
-    const d    = S.data[key];
-    const past   = key < todayStr;
-    const today  = key === todayStr;
-    const future = key > todayStr;
-    const logged    = d && (d.cycles > 0 || d.shambhavi || d.bhuta || d.devi);
-    const complete  = d && d.cycles >= 1 && d.shambhavi && d.bhuta && d.devi;
-    const milestone = [21, 40, 48, 90, 111].includes(num);
-
-    const card = document.createElement('div');
-    card.className = 'day-card' +
-      (today     ? ' today'     : '') +
-      (future    ? ' future'    : '') +
-      (milestone ? ' milestone' : '') +
-      (complete  ? ' complete'  : (logged ? ' logged' : ''));
-    card.id = 'dc-' + key;
-
-    if (!future) card.onclick = () => openModal(num, key, d);
-
-    const g = (sym, cls, on) =>
-      `<svg class="dcg s-${cls}${on ? ' on' : ''}"><use href="#g-${sym}"/></svg>`;
-
-    card.innerHTML =
-      `<div class="dc-num" style="color:${today ? 'var(--orange)' : 'var(--dark)'}">${num}</div>` +
-      `<div class="dc-date">${shortDate(date)}</div>` +
-      `<div class="dc-glyphs">` +
-        g('surya',     'surya',     d && d.cycles >= 1) +
-        g('shambhavi', 'shambhavi', !!d?.shambhavi) +
-        g('bhuta',     'bhuta',     !!d?.bhuta) +
-        g('devi',      'devi',      !!d?.devi) +
-      `</div>`;
-
-    grid.appendChild(card);
-  }
-
-  // No auto-scroll. scrollIntoView was bubbling up to scroll the whole window
-  // on every load; the page now stays exactly where the user left it.
-}
+window.addEventListener('scroll', () => {
+  document.getElementById('header').classList.toggle('scrolled', window.scrollY > 8);
+}, { passive: true });
 
 /* ============================================================
-   UPDATE STATS
-   ============================================================ */
-function updateStats() {
-  const start    = parseLocal(CFG.START_DATE);
-  const todayStr = todayKey();
-  let done = 0, streak = 0, counting = true, shambhCt = 0, suryaTot = 0;
-
-  for (let i = 110; i >= 0; i--) {
-    const date = new Date(start);
-    date.setDate(date.getDate() + i);
-    const key = toKey(date);
-    if (key > todayStr) continue;
-
-    const d      = S.data[key];
-    const logged = d && (d.cycles > 0 || d.shambhavi || d.bhuta || d.devi);
-    if (logged) {
-      done++;
-      if (counting) streak++;
-      if (d.shambhavi) shambhCt++;
-      suryaTot += d.cycles;
-    } else {
-      counting = false;
-    }
-  }
-
-  document.getElementById('st-done').textContent     = done;
-  document.getElementById('st-streak').textContent   = streak;
-  document.getElementById('st-shambhavi').textContent =
-    done > 0 ? Math.round((shambhCt / done) * 100) + '%' : '0%';
-  document.getElementById('st-surya').textContent    = suryaTot;
-
-  // Streak badge on the today panel
-  const badge = document.getElementById('streak-badge');
-  if (streak > 0) {
-    document.getElementById('streak-text').textContent =
-      streak + '-day streak';
-    badge.hidden = false;
-  } else {
-    badge.hidden = true;
-  }
-}
-
-/* ============================================================
-   MODAL
-   ============================================================ */
-function openModal(num, key, d) {
-  document.getElementById('m-title').textContent = 'Day ' + num;
-  document.getElementById('m-date').textContent  = displayDate(parseLocal(key));
-
-  const rows = [
-    { label: 'Surya Kriya',          val: d ? `${d.cycles} / 3 cycles`         : '—', color: 'var(--orange)',  on: d?.cycles > 0 },
-    { label: 'Shambhavi Mahamudra',  val: d?.shambhavi ? 'Completed' : 'Not logged', color: 'var(--crimson)', on: d?.shambhavi },
-    { label: 'Bhuta Shuddhi',        val: d?.bhuta     ? 'Completed' : 'Not logged', color: 'var(--blue)',    on: d?.bhuta },
-    { label: 'Devi Sadhana',         val: d?.devi      ? 'Completed' : 'Not logged', color: 'var(--brown)',   on: d?.devi },
-  ];
-
-  document.getElementById('m-body').innerHTML = rows.map(r => `
-    <div class="modal-row">
-      <div>
-        <div class="modal-practice">${r.label}</div>
-        <div class="modal-val" style="color:${r.on ? r.color : 'var(--light)'}">${r.val}</div>
-      </div>
-      <div class="modal-dot" style="background:${r.on ? r.color : 'var(--muted)'}"></div>
-    </div>
-  `).join('');
-
-  document.getElementById('overlay').classList.add('open');
-}
-function closeModal() {
-  document.getElementById('overlay').classList.remove('open');
-}
-function handleOverlayClick(e) {
-  if (e.target === document.getElementById('overlay')) closeModal();
-}
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-/* ============================================================
-   PWA — register service worker
+   PWA
    ============================================================ */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(e => console.log('SW registration skipped:', e.message));
+    navigator.serviceWorker.register('sw.js').catch(e => console.log('SW skipped:', e.message));
   });
 }
 
-/* ============================================================
-   START
-   ============================================================ */
 init();
 </script>
 </body>
