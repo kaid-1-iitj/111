@@ -148,10 +148,11 @@
     .pcard.s-devi      { --pc: var(--brown); }
 
     /* done = warm, filled, glad — never a grey toggle */
-    .pcard.done {
-      border-color: color-mix(in srgb, var(--pc) 42%, var(--border));
-      background: color-mix(in srgb, var(--pc) 9%, var(--card));
-    }
+    .pcard.done                  { border-color: rgba(140,94,60,0.35); background: #FBF5EE; }
+    .pcard.done.s-surya          { border-color: rgba(236,103,27,0.4); background: #FFF5EE; }
+    .pcard.done.s-shambhavi      { border-color: rgba(200,50,50,0.35); background: #FFF2F2; }
+    .pcard.done.s-bhuta          { border-color: rgba(27,110,200,0.35); background: #F0F5FF; }
+    .pcard.done.s-devi           { border-color: rgba(139,94,60,0.40); background: #FBF6F0; }
 
     .pglyph {
       width: 30px; height: 30px;
@@ -179,7 +180,7 @@
       width: 28px; height: 28px;
       flex-shrink: 0;
       border-radius: 50%;
-      border: 2px solid color-mix(in srgb, var(--pc) 32%, var(--border));
+      border: 2px solid var(--border);
       position: relative;
       transition: all 0.22s;
     }
