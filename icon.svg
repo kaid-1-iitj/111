@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Cream tile -->
+  <rect width="512" height="512" rx="112" fill="#F7E4CF"/>
+  <rect width="512" height="512" rx="112" fill="url(#g)"/>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FCEFE0"/>
+      <stop offset="1" stop-color="#F4D9BC"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sun-mandala -->
+  <g transform="translate(256,256)" fill="none" stroke-linecap="round">
+    <!-- core glow -->
+    <circle r="78" fill="#EC671B" opacity="0.10"/>
+    <!-- disc -->
+    <circle r="78" stroke="#EC671B" stroke-width="9" opacity="0.85"/>
+    <!-- dotted inner halo -->
+    <circle r="56" stroke="#C83232" stroke-width="7" stroke-linecap="round" stroke-dasharray="1 18" opacity="0.8"/>
+    <!-- rays -->
+    <g stroke="#EC671B" stroke-width="9" opacity="0.85">
+      <line x1="92"     y1="0"      x2="132"    y2="0"/>
+      <line x1="79.67"  y1="46"     x2="114.32" y2="66"/>
+      <line x1="46"     y1="79.67"  x2="66"     y2="114.32"/>
+      <line x1="0"      y1="92"     x2="0"      y2="132"/>
+      <line x1="-46"    y1="79.67"  x2="-66"    y2="114.32"/>
+      <line x1="-79.67" y1="46"     x2="-114.32" y2="66"/>
+      <line x1="-92"    y1="0"      x2="-132"   y2="0"/>
+      <line x1="-79.67" y1="-46"    x2="-114.32" y2="-66"/>
+      <line x1="-46"    y1="-79.67" x2="-66"    y2="-114.32"/>
+      <line x1="0"      y1="-92"    x2="0"      y2="-132"/>
+      <line x1="46"     y1="-79.67" x2="66"     y2="-114.32"/>
+      <line x1="79.67"  y1="-46"    x2="114.32" y2="-66"/>
+    </g>
+  </g>
+</svg>
