@@ -932,20 +932,28 @@ function setCycles(v) {
    LOAD DATA
    ============================================================ */
 async function loadData() {
-  // Try localStorage first (always works, no cloud needed)
+  console.log('=== LOADING DATA ===');
+
+  // Try localStorage first
   try {
-    const stored = localStorage.getItem('sadhana_data');
-    if (stored) S.data = JSON.parse(stored);
+    const stored = localStorage.getItem('sadhana-tracker-data');
+    console.log('localStorage item found:', !!stored);
+    if (stored) {
+      S.data = JSON.parse(stored);
+      console.log('Loaded from localStorage:', Object.keys(S.data).length, 'entries');
+    }
   } catch(e) {
-    console.warn('localStorage read failed:', e);
+    console.error('localStorage read error:', e.message);
   }
 
-  // Try to sync from cloud if configured
-  if (CFG.SCRIPT_URL !== 'YOUR_APPS_SCRIPT_WEB_APP_URL') {
+  // Try cloud (if configured)
+  if (CFG.SCRIPT_URL && CFG.SCRIPT_URL !== 'YOUR_APPS_SCRIPT_WEB_APP_URL') {
     try {
-      const r = await fetch(CFG.SCRIPT_URL + '?action=get');
+      console.log('Attempting cloud sync...');
+      const r = await fetch(CFG.SCRIPT_URL + '?action=get', { timeout: 5000 });
       const j = await r.json();
-      if (j.data) {
+      if (j.data && j.data.length) {
+        console.log('Cloud sync success:', j.data.length, 'rows');
         (j.data || []).forEach(row => {
           if (row[0]) {
             S.data[row[0]] = {
@@ -956,15 +964,16 @@ async function loadData() {
             };
           }
         });
-        localStorage.setItem('sadhana_data', JSON.stringify(S.data));
+        localStorage.setItem('sadhana-tracker-data', JSON.stringify(S.data));
       }
     } catch(e) {
-      console.log('Cloud sync skipped (Apps Script not deployed yet)');
+      console.log('Cloud sync unavailable (expected if not deployed):', e.message);
     }
   }
 
-  // Populate today's form
+  // Load today's saved data into form
   const td = S.data[S.todayKey];
+  console.log('Today (' + S.todayKey + ') data:', td);
   if (td) {
     setCycles(td.cycles);
     document.getElementById('t-shambhavi').checked = td.shambhavi;
@@ -991,27 +1000,39 @@ async function saveToday() {
     devi:      document.getElementById('t-devi').checked,
   };
 
-  // Save to local storage first (always works)
+  console.log('=== SAVING DATA ===');
+  console.log('Entry:', entry);
+
+  // Update in-memory data
   S.data[S.todayKey] = entry;
+
+  // Save to localStorage (main storage)
+  let saved = false;
   try {
-    localStorage.setItem('sadhana_data', JSON.stringify(S.data));
+    const json = JSON.stringify(S.data);
+    console.log('Saving to localStorage, size:', json.length, 'bytes');
+    localStorage.setItem('sadhana-tracker-data', json);
+    console.log('✓ localStorage saved successfully');
+    saved = true;
   } catch(e) {
-    console.warn('localStorage save failed:', e);
+    console.error('✗ localStorage save failed:', e.message);
+    msg.textContent = 'Error: localStorage failed';
+    msg.className = 'save-msg err';
+    return;
   }
+
   renderGrid();
   updateStats();
 
-  // Try to sync to cloud
-  if (CFG.SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL') {
+  // Try cloud sync (optional)
+  if (!CFG.SCRIPT_URL || CFG.SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL') {
     msg.className = 'save-msg ok';
-    msg.textContent = 'Saved locally ✔';
-    setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 3000);
+    msg.textContent = 'Saved ✔';
+    setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 2500);
     return;
   }
 
   btn.disabled = true;
-  btn.textContent = 'Syncing to cloud…';
-
   try {
     const r = await fetch(CFG.SCRIPT_URL, {
       method: 'POST',
@@ -1019,17 +1040,14 @@ async function saveToday() {
       body: JSON.stringify(entry),
     });
     const j = await r.json();
-    if (!r.ok || !j.success) throw new Error(j.error || 'Server error');
-    msg.className = 'save-msg ok';
-    msg.textContent = 'Saved & synced ✔';
+    console.log('Cloud response:', j);
   } catch(e) {
-    msg.className = 'save-msg ok';
-    msg.textContent = 'Saved locally (cloud offline)';
-    console.log('Cloud sync skipped:', e.message);
+    console.log('Cloud sync skipped (not deployed)');
   } finally {
     btn.disabled = false;
-    btn.textContent = "Save Today's Practice";
-    setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 3000);
+    msg.className = 'save-msg ok';
+    msg.textContent = 'Saved ✔';
+    setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 2500);
   }
 }
 
