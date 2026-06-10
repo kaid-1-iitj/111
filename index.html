@@ -1006,49 +1006,53 @@ async function saveToday() {
   // Update in-memory data
   S.data[S.todayKey] = entry;
 
-  // Save to localStorage (main storage)
-  let saved = false;
+  // Save to localStorage as backup
   try {
-    const json = JSON.stringify(S.data);
-    console.log('Saving to localStorage, size:', json.length, 'bytes');
-    localStorage.setItem('sadhana-tracker-data', json);
-    console.log('✓ localStorage saved successfully');
-    saved = true;
+    localStorage.setItem('sadhana-tracker-data', JSON.stringify(S.data));
+    console.log('✓ localStorage backup saved');
   } catch(e) {
-    console.error('✗ localStorage save failed:', e.message);
-    msg.textContent = 'Error: localStorage failed';
-    msg.className = 'save-msg err';
-    return;
+    console.warn('localStorage backup failed:', e.message);
+  }
+
+  // Save to Google Sheets (PRIMARY - always syncs)
+  if (CFG.SCRIPT_URL && CFG.SCRIPT_URL !== 'YOUR_APPS_SCRIPT_WEB_APP_URL') {
+    btn.disabled = true;
+    btn.textContent = 'Saving to Google Sheets…';
+
+    try {
+      console.log('Saving to Google Sheets...');
+      const r = await fetch(CFG.SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(entry),
+      });
+      const j = await r.json();
+      console.log('Google Sheets response:', j);
+
+      if (j.success) {
+        msg.className = 'save-msg ok';
+        msg.textContent = 'Saved to Google Sheets ✔';
+        console.log('✓ Successfully saved to Google Sheets');
+      } else {
+        throw new Error(j.error || 'Server error');
+      }
+    } catch(e) {
+      console.error('Google Sheets save failed:', e.message);
+      msg.className = 'save-msg err';
+      msg.textContent = 'Save failed: ' + e.message;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Save Today's Practice";
+      setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 3000);
+    }
+  } else {
+    msg.className = 'save-msg ok';
+    msg.textContent = 'Saved ✔';
+    setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 2500);
   }
 
   renderGrid();
   updateStats();
-
-  // Try cloud sync (optional)
-  if (!CFG.SCRIPT_URL || CFG.SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL') {
-    msg.className = 'save-msg ok';
-    msg.textContent = 'Saved ✔';
-    setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 2500);
-    return;
-  }
-
-  btn.disabled = true;
-  try {
-    const r = await fetch(CFG.SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(entry),
-    });
-    const j = await r.json();
-    console.log('Cloud response:', j);
-  } catch(e) {
-    console.log('Cloud sync skipped (not deployed)');
-  } finally {
-    btn.disabled = false;
-    msg.className = 'save-msg ok';
-    msg.textContent = 'Saved ✔';
-    setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 2500);
-  }
 }
 
 /* ============================================================
