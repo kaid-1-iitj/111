@@ -121,7 +121,30 @@
       font-size: 14.5px;
       color: var(--mid);
       margin-top: 6px;
-      margin-bottom: 26px;
+      margin-bottom: 20px;
+    }
+
+    /* ─── Day number + sun row (no progress bar) ─────── */
+    .day-row {
+      display: flex;
+      align-items: flex-start;   /* both tops flush — sun level with the number */
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .day-num {
+      font-family: var(--font-head);
+      font-weight: 900;
+      font-size: 72px;
+      line-height: 0.88;
+      color: var(--orange);
+      letter-spacing: -3px;
+    }
+    .day-sun {
+      width: 68px; height: 68px;
+      color: var(--orange);
+      opacity: 0.22;
+      flex-shrink: 0;
+      margin-top: 2px;  /* optically level with top of the number */
     }
 
     /* ─── Practice cards (tap to complete) ───────────── */
@@ -318,6 +341,14 @@
     <div class="greeting" id="greeting">&nbsp;</div>
     <div class="today-date" id="today-date">&nbsp;</div>
 
+    <!-- Day number left, sun right, tops aligned, no progress bar -->
+    <div class="day-row" id="day-row">
+      <div class="day-num" id="day-num">—</div>
+      <svg class="day-sun" viewBox="0 0 24 24" aria-hidden="true">
+        <use href="#g-surya"/>
+      </svg>
+    </div>
+
     <div class="practices">
       <!-- Surya Kriya — keeps its cycle counter -->
       <div class="pcard s-surya" id="pc-surya">
@@ -428,8 +459,17 @@ function init() {
   document.getElementById('today-date').textContent =
     now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
-  // Soft countdown, top-right
+  // Day number + sun row
   const num  = dayNum(S.todayKey);
+  const dayNumEl = document.getElementById('day-num');
+  const dayRow   = document.getElementById('day-row');
+  if (num >= 1 && num <= CFG.TOTAL_DAYS) {
+    dayNumEl.textContent = num;
+  } else {
+    dayRow.style.display = 'none';
+  }
+
+  // Soft countdown, top-right
   const left = CFG.TOTAL_DAYS - num + 1;
   const el   = document.getElementById('header-left');
   if (num < 1) {
