@@ -68,6 +68,24 @@
       top: 0;
       z-index: 50;
       border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: box-shadow 0.3s, background 0.3s;
+    }
+    /* thin progress stripe along the bottom of the header */
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 2px;
+      width: var(--hprog, 0%);
+      background: linear-gradient(90deg, var(--orange), var(--crimson));
+      transition: width 1.2s ease;
+      pointer-events: none;
+    }
+    .header.scrolled {
+      background: rgba(42,30,20,0.95);
+      box-shadow: 0 3px 28px rgba(0,0,0,0.32);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
     .header-brand { display: flex; align-items: center; gap: 14px; }
     .header-icon {
@@ -1156,6 +1174,14 @@ function init() {
   document.getElementById('hero-pct').textContent  = pct + '%';
   document.getElementById('hero-prog').style.width = pct + '%';
 
+  // Header progress stripe
+  document.querySelector('.header').style.setProperty('--hprog', pct + '%');
+
+  // Scroll-aware header shadow
+  window.addEventListener('scroll', () => {
+    document.querySelector('.header').classList.toggle('scrolled', window.scrollY > 16);
+  }, { passive: true });
+
   // Live mandala reacts as you log
   ['t-shambhavi', 't-bhuta', 't-devi'].forEach(id => {
     document.getElementById(id).addEventListener('change', () => {
@@ -1309,20 +1335,23 @@ async function saveToday() {
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(entry),
       });
-      const j = await r.json();
-      if (!j.success) throw new Error(j.error || 'Server error');
+      const raw = await r.text();
+      console.log('Cloud response:', raw.substring(0, 300));
+      const j = JSON.parse(raw);
+      if (!j.success) throw new Error(j.error || 'Server returned: ' + raw.substring(0, 80));
       msg.className = 'save-msg ok';
       msg.textContent = 'Saved ✔';
       celebrateSave(btn);
     } catch(e) {
-      // Cached locally, so the day is safe even if cloud failed
-      msg.className = 'save-msg ok';
-      msg.textContent = 'Saved (will sync when online)';
-      console.log('Cloud sync deferred:', e.message);
+      // Day is safe in localStorage — but show a visible warning, not fake success
+      msg.className = 'save-msg';
+      msg.style.cssText = 'color:var(--terracotta);font-weight:600';
+      msg.textContent = '✓ Local · cloud sync failed';
+      console.warn('Cloud save failed. Check Apps Script deployment.', e.message);
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Save Today’s Practice';
-      setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 2500);
+      btn.textContent = "Save Today's Practice";
+      setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; msg.style.cssText = ''; }, 3500);
     }
   } else {
     msg.className = 'save-msg ok';
@@ -1389,9 +1418,10 @@ function renderGrid() {
     grid.appendChild(card);
   }
 
-  // Scroll today into view
+  // On desktop only — scroll the tracker panel to today's card.
+  // On mobile the layout is single-column; auto-scrolling would hijack the page.
   const todayCard = document.getElementById('dc-' + todayKey());
-  if (todayCard) {
+  if (todayCard && window.innerWidth > 900) {
     setTimeout(() => todayCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300);
   }
 }
