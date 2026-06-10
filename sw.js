@@ -1,5 +1,5 @@
 /* 111 Days Sadhana — lightweight service worker */
-const CACHE = 'sadhana-v1';
+const CACHE = 'sadhana-v3';
 const SHELL = [
   './',
   './index.html',
@@ -41,7 +41,22 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // App shell (same-origin) — cache-first, fall back to network.
+  // HTML navigations / the page itself — network-first so code updates land
+  // immediately; fall back to cache only when offline.
+  const isHTML = req.mode === 'navigate' ||
+                 url.pathname.endsWith('/') ||
+                 url.pathname.endsWith('index.html');
+  if (url.origin === self.location.origin && isHTML) {
+    e.respondWith(
+      fetch(req).then(res => {
+        if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
+        return res;
+      }).catch(() => caches.match(req).then(c => c || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // Other same-origin assets (icons, manifest) — cache-first.
   if (url.origin === self.location.origin) {
     e.respondWith(
       caches.match(req).then(cached => cached || fetch(req).then(res => {

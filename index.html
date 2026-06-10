@@ -1264,29 +1264,66 @@ function loadData() {
   syncFromCloud();
 }
 
+/* True if an entry actually records a practice (vs. an empty/blank row). */
+function hasContent(o) {
+  return !!o && (o.cycles > 0 || o.shambhavi || o.bhuta || o.devi);
+}
+
+/* Coerce any date shape (plain 'YYYY-MM-DD', ISO timestamp, Date) → local key. */
+function normalizeDate(v) {
+  if (!v) return '';
+  if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+  const d = new Date(v);
+  return isNaN(d) ? '' : toKey(d);
+}
+
 async function syncFromCloud() {
   if (!CFG.SCRIPT_URL || CFG.SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL') return;
   try {
     const r = await fetch(CFG.SCRIPT_URL + '?action=get');
     const j = await r.json();
-    if (j.data && j.data.length) {
-      j.data.forEach(row => {
-        if (row[0]) {
-          S.data[row[0]] = {
-            cycles:    Number(row[1]) || 0,
-            shambhavi: row[2] === true || row[2] === 'TRUE',
-            bhuta:     row[3] === true || row[3] === 'TRUE',
-            devi:      row[4] === true || row[4] === 'TRUE',
-          };
-        }
-      });
+    const rows = j.data || [];
+    let merged = 0;
+
+    rows.forEach(row => {
+      let key, entry;
+      if (Array.isArray(row)) {
+        // Canonical shape: [date, cycles, shambhavi, bhuta, devi]
+        key = normalizeDate(row[0]);
+        entry = {
+          cycles:    Number(row[1]) || 0,
+          shambhavi: row[2] === true || row[2] === 'TRUE',
+          bhuta:     row[3] === true || row[3] === 'TRUE',
+          devi:      row[4] === true || row[4] === 'TRUE',
+        };
+      } else if (row && typeof row === 'object') {
+        // Legacy shape: { date, surya_cycles|cycles, shambhavi, bhuta, devi }
+        key = normalizeDate(row.date);
+        entry = {
+          cycles:    Number(row.surya_cycles != null ? row.surya_cycles : row.cycles) || 0,
+          shambhavi: row.shambhavi === true || row.shambhavi === 'TRUE',
+          bhuta:     row.bhuta === true || row.bhuta === 'TRUE',
+          devi:      row.devi === true || row.devi === 'TRUE',
+        };
+      }
+      if (!key) return;
+      // Non-destructive merge: cloud wins only when it has real data, or when
+      // there's nothing logged locally. Never overwrite a logged local day
+      // with an empty cloud row.
+      if (hasContent(entry) || !hasContent(S.data[key])) {
+        S.data[key] = entry;
+        merged++;
+      }
+    });
+
+    if (merged) {
       localStorage.setItem('sadhana-tracker-data', JSON.stringify(S.data));
       fillTodayForm();
       renderGrid();
       updateStats();
     }
   } catch(e) {
-    console.log('Cloud offline — using cached data.');
+    console.log('Cloud offline — using cached data.', e.message);
   }
 }
 
@@ -1418,12 +1455,8 @@ function renderGrid() {
     grid.appendChild(card);
   }
 
-  // On desktop only — scroll the tracker panel to today's card.
-  // On mobile the layout is single-column; auto-scrolling would hijack the page.
-  const todayCard = document.getElementById('dc-' + todayKey());
-  if (todayCard && window.innerWidth > 900) {
-    setTimeout(() => todayCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300);
-  }
+  // No auto-scroll. scrollIntoView was bubbling up to scroll the whole window
+  // on every load; the page now stays exactly where the user left it.
 }
 
 /* ============================================================
