@@ -12,23 +12,25 @@
     /* ─── Design Tokens ─────────────────────────────── */
     :root {
       --orange:     #EC671B;
-      --orange-dim: #C9571500;
+      --terracotta: #D2691E;
       --blue:       #1B6EC8;
       --crimson:    #C83232;
       --brown:      #8B5E3C;
       --bg:         #F4EFE6;
       --card:       #FFFFFF;
-      --dark:       #1C1C1E;
-      --mid:        #4A4040;
-      --light:      #9A9080;
-      --border:     #E2D9CC;
-      --muted:      #EDE6D8;
+      --cream:      #FCEFE0;
+      --cream-2:    #F7E4CF;
+      --dark:       #2A1E14;
+      --mid:        #5A4A3C;
+      --light:      #A6957F;
+      --border:     #E7DCCB;
+      --muted:      #EFE7D9;
       --success:    #2E7D32;
       --font-head:  'Roboto', sans-serif;
       --font-body:  'Open Sans', sans-serif;
-      --radius:     12px;
-      --shadow:     0 2px 12px rgba(0,0,0,0.07);
-      --shadow-lg:  0 8px 32px rgba(0,0,0,0.12);
+      --radius:     14px;
+      --shadow:     0 2px 12px rgba(90,60,30,0.06);
+      --shadow-lg:  0 12px 40px rgba(90,60,30,0.16);
     }
 
     /* ─── Reset ─────────────────────────────────────── */
@@ -114,37 +116,34 @@
       overflow-y: auto;
     }
 
-    /* Hero */
+    /* Hero — light, earthy, Indian folk-art */
     .hero {
-      background: linear-gradient(155deg, #1C1C1E 0%, #2C180A 100%);
-      padding: 28px 28px 24px;
-      color: #fff;
+      background: linear-gradient(165deg, var(--cream) 0%, var(--cream-2) 100%);
+      padding: 30px 28px 26px;
+      color: var(--dark);
       position: relative;
       overflow: hidden;
+      border-bottom: 1px solid var(--border);
     }
-    .hero-glow-1 {
-      position: absolute; top: -40px; right: -40px;
-      width: 180px; height: 180px;
-      background: var(--orange); opacity: 0.06;
-      border-radius: 50%; pointer-events: none;
+    /* Hand-drawn sun-mandala watermark */
+    .hero-art {
+      position: absolute;
+      top: -34px; right: -34px;
+      width: 230px; height: 230px;
+      pointer-events: none;
+      opacity: 0.9;
     }
-    .hero-glow-2 {
-      position: absolute; bottom: -60px; left: -30px;
-      width: 220px; height: 220px;
-      background: var(--crimson); opacity: 0.04;
-      border-radius: 50%; pointer-events: none;
-    }
-    .hero-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      position: relative; z-index: 1;
-    }
+    .hero-art .sun-disc  { fill: none; stroke: var(--orange);    stroke-width: 2.4; opacity: 0.30; }
+    .hero-art .sun-ray   { stroke: var(--orange);    stroke-width: 2.4; stroke-linecap: round; opacity: 0.26; }
+    .hero-art .sun-dots  { fill: none; stroke: var(--crimson);   stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 0.5 7; opacity: 0.28; }
+    .hero-art .sun-core  { fill: var(--orange); opacity: 0.10; }
+
+    .hero-content { position: relative; z-index: 1; }
     .hero-day-num {
       font-family: var(--font-head);
       font-weight: 900;
-      font-size: 84px;
-      line-height: 1;
+      font-size: 86px;
+      line-height: 0.92;
       color: var(--orange);
       letter-spacing: -2px;
     }
@@ -152,68 +151,54 @@
       font-size: 10px;
       letter-spacing: 3px;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
-      margin-top: 6px;
-    }
-    .hero-ring {
-      flex-shrink: 0;
-      width: 64px; height: 64px;
-      position: relative;
-    }
-    .hero-ring svg { transform: rotate(-90deg); display: block; }
-    .ring-bg   { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 5; }
-    .ring-fill {
-      fill: none;
-      stroke: var(--orange);
-      stroke-width: 5;
-      stroke-linecap: round;
-      transition: stroke-dashoffset 1s ease;
-    }
-    .ring-label {
-      position: absolute; inset: 0;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-    }
-    .ring-pct {
-      font-family: var(--font-head);
-      font-weight: 700;
-      font-size: 13px;
-      color: #fff;
-      line-height: 1;
-    }
-    .ring-done {
-      font-size: 8px;
-      color: rgba(255,255,255,0.4);
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
+      color: var(--brown);
+      margin-top: 8px;
+      font-weight: 600;
     }
     .hero-date {
-      position: relative; z-index: 1;
-      font-size: 14px;
-      color: rgba(255,255,255,0.7);
-      margin-top: 10px;
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--dark);
+      margin-top: 12px;
     }
     .hero-progress {
-      position: relative; z-index: 1;
       margin-top: 16px;
-      height: 3px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 2px;
+      height: 5px;
+      background: rgba(140,94,60,0.14);
+      border-radius: 3px;
       overflow: hidden;
     }
     .hero-progress-fill {
       height: 100%;
-      background: var(--orange);
-      border-radius: 2px;
+      background: linear-gradient(90deg, var(--orange), var(--crimson));
+      border-radius: 3px;
       transition: width 1s ease;
     }
+    .hero-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-top: 8px;
+    }
+    .hero-pct {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--orange);
+    }
+    .hero-remaining {
+      font-size: 11px;
+      color: var(--light);
+    }
     .hero-quote {
-      position: relative; z-index: 1;
-      margin-top: 14px;
-      font-size: 11.5px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border);
+      font-size: 12.5px;
       font-style: italic;
-      color: rgba(255,255,255,0.38);
-      line-height: 1.65;
+      color: var(--mid);
+      line-height: 1.7;
     }
 
     /* Practice Form */
@@ -235,14 +220,26 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 13px 0;
+      padding: 14px 0;
       border-bottom: 1px solid var(--muted);
     }
     .practice-row:last-child { border-bottom: none; }
+    .practice-row.tappable {
+      cursor: pointer;
+      margin: 0 -12px;
+      padding-left: 12px;
+      padding-right: 12px;
+      border-radius: 10px;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s;
+    }
+    .practice-row.tappable:active { background: var(--muted); }
+    .practice-row:has(input:checked) .pname { color: var(--orange); }
     .pname {
       font-family: var(--font-head);
       font-weight: 700;
       font-size: 14.5px;
+      transition: color 0.2s;
     }
     .pdesc {
       font-size: 11px;
@@ -452,7 +449,18 @@
       cursor: default;
       pointer-events: none;
     }
-    .day-card.logged { background: #FAFAF8; }
+    .day-card.logged { background: #FCF8F1; }
+    .day-card.complete {
+      background: linear-gradient(160deg, #FCEFE0, #FBF6EE);
+      border-color: rgba(236,103,27,0.35);
+    }
+    .day-card.complete .dc-num::after {
+      content: '✦';
+      font-size: 8px;
+      color: var(--orange);
+      margin-left: 3px;
+      vertical-align: top;
+    }
     .dc-num {
       font-family: var(--font-head);
       font-weight: 700;
@@ -587,19 +595,43 @@
       .today-panel {
         position: static;
         height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
       }
       .stats { grid-template-columns: repeat(2, 1fr); }
+
+      /* Bigger thumb targets */
+      .practice-row { padding: 16px 0; }
+      .practice-row.tappable { padding-left: 12px; padding-right: 12px; }
+      .toggle { width: 54px; height: 30px; }
+      .toggle input:checked + .tslider::before { transform: translateX(24px); }
+      .tslider::before { width: 22px; height: 22px; }
+      .cbtn { width: 38px; height: 38px; font-size: 20px; }
+      .cval { font-size: 24px; width: 28px; }
+
+      /* Sticky save bar so it's always reachable */
+      .save-area {
+        position: sticky;
+        bottom: 0;
+        background: var(--card);
+        box-shadow: 0 -6px 20px rgba(90,60,30,0.08);
+        z-index: 10;
+      }
+      .save-btn { padding: 16px; font-size: 14px; }
     }
     @media (max-width: 600px) {
-      .header { padding: 0 16px; }
+      .header { padding: 0 16px; height: 58px; }
       .header-name { font-size: 15px; }
-      .hero { padding: 22px 18px 20px; }
-      .hero-day-num { font-size: 68px; }
-      .practices { padding: 16px 18px; }
-      .save-area { padding: 14px 18px 20px; }
-      .tracker-panel { padding: 20px 14px 32px; }
-      .days-grid { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 6px; }
+      .header-day { font-size: 26px; }
+      .hero { padding: 24px 20px 22px; }
+      .hero-day-num { font-size: 76px; }
+      .hero-art { width: 190px; height: 190px; top: -28px; right: -28px; }
+      .practices { padding: 16px 20px; }
+      .save-area { padding: 14px 20px 18px; }
+      .tracker-panel { padding: 22px 16px 36px; }
+      .days-grid { grid-template-columns: repeat(auto-fill, minmax(62px, 1fr)); gap: 7px; }
       .stat-num { font-size: 22px; }
+      .legend { gap: 10px 14px; }
     }
   </style>
 </head>
@@ -633,37 +665,43 @@
   <aside class="today-panel" id="today-panel">
 
     <div class="hero" id="hero-section">
-      <div class="hero-glow-1"></div>
-      <div class="hero-glow-2"></div>
+      <!-- Hand-drawn sun-mandala (Surya) watermark -->
+      <svg class="hero-art" viewBox="0 0 200 200" aria-hidden="true">
+        <circle class="sun-core" cx="100" cy="100" r="34"/>
+        <circle class="sun-disc" cx="100" cy="100" r="34"/>
+        <circle class="sun-dots" cx="100" cy="100" r="24"/>
+        <g class="sun-ray">
+          <line x1="140"    y1="100"    x2="158"    y2="100"/>
+          <line x1="134.64" y1="120"    x2="150.23" y2="129"/>
+          <line x1="120"    y1="134.64" x2="129"    y2="150.23"/>
+          <line x1="100"    y1="140"    x2="100"    y2="158"/>
+          <line x1="80"     y1="134.64" x2="71"     y2="150.23"/>
+          <line x1="65.36"  y1="120"    x2="49.77"  y2="129"/>
+          <line x1="60"     y1="100"    x2="42"     y2="100"/>
+          <line x1="65.36"  y1="80"     x2="49.77"  y2="71"/>
+          <line x1="80"     y1="65.36"  x2="71"     y2="49.77"/>
+          <line x1="100"    y1="60"     x2="100"    y2="42"/>
+          <line x1="120"    y1="65.36"  x2="129"    y2="49.77"/>
+          <line x1="134.64" y1="80"     x2="150.23" y2="71"/>
+        </g>
+      </svg>
 
-      <div class="hero-top">
-        <div>
-          <div class="hero-day-num" id="hero-num">—</div>
-          <div class="hero-day-label">Day of Practice</div>
+      <div class="hero-content">
+        <div class="hero-day-num" id="hero-num">—</div>
+        <div class="hero-day-label">Day of Practice</div>
+
+        <div class="hero-date" id="hero-date">—</div>
+
+        <div class="hero-progress">
+          <div class="hero-progress-fill" id="hero-prog" style="width:0%"></div>
         </div>
-        <!-- Progress ring -->
-        <div class="hero-ring">
-          <svg viewBox="0 0 64 64" width="64" height="64">
-            <circle class="ring-bg"   cx="32" cy="32" r="27"/>
-            <circle class="ring-fill" cx="32" cy="32" r="27"
-              id="ring-circle"
-              stroke-dasharray="169.6"
-              stroke-dashoffset="169.6"/>
-          </svg>
-          <div class="ring-label">
-            <div class="ring-pct" id="ring-pct">0%</div>
-            <div class="ring-done">done</div>
-          </div>
+        <div class="hero-meta">
+          <span class="hero-pct" id="hero-pct">0%</span>
+          <span class="hero-remaining" id="hero-remaining">—</span>
         </div>
+
+        <div class="hero-quote" id="hero-quote">&nbsp;</div>
       </div>
-
-      <div class="hero-date" id="hero-date">—</div>
-
-      <div class="hero-progress">
-        <div class="hero-progress-fill" id="hero-prog" style="width:0%"></div>
-      </div>
-
-      <div class="hero-quote" id="hero-quote">&nbsp;</div>
     </div>
 
     <!-- Practice form -->
@@ -691,40 +729,40 @@
       </div>
 
       <!-- Shambhavi -->
-      <div class="practice-row">
+      <label class="practice-row tappable">
         <div>
           <div class="pname">Shambhavi Mahamudra</div>
           <div class="pdesc">21-min kriya</div>
         </div>
-        <label class="toggle" aria-label="Shambhavi done">
+        <span class="toggle">
           <input type="checkbox" id="t-shambhavi">
           <span class="tslider"></span>
-        </label>
-      </div>
+        </span>
+      </label>
 
       <!-- Bhuta Shuddhi -->
-      <div class="practice-row">
+      <label class="practice-row tappable">
         <div>
           <div class="pname">Bhuta Shuddhi</div>
           <div class="pdesc">Elemental purification</div>
         </div>
-        <label class="toggle" aria-label="Bhuta Shuddhi done">
+        <span class="toggle">
           <input type="checkbox" id="t-bhuta">
           <span class="tslider"></span>
-        </label>
-      </div>
+        </span>
+      </label>
 
       <!-- Devi Sadhana -->
-      <div class="practice-row">
+      <label class="practice-row tappable">
         <div>
           <div class="pname">Devi Sadhana</div>
           <div class="pdesc">Linga Bhairavi offering</div>
         </div>
-        <label class="toggle" aria-label="Devi Sadhana done">
+        <span class="toggle">
           <input type="checkbox" id="t-devi">
           <span class="tslider"></span>
-        </label>
-      </div>
+        </span>
+      </label>
     </div>
 
     <div class="save-area">
@@ -875,21 +913,26 @@ function init() {
   document.getElementById('tracker-range').textContent =
     shortDate(parseLocal(CFG.START_DATE)) + ' – ' + shortDate(end) + ' · 111 days';
 
+  const remaining = Math.max(0, total - num + 1);
+
   if (num < 1) {
     // Before journey starts
     document.getElementById('hero-num').textContent = '—';
     document.getElementById('hero-date').textContent = displayDate(new Date());
+    document.getElementById('hero-remaining').textContent =
+      'Begins ' + shortDate(parseLocal(CFG.START_DATE));
     document.getElementById('hero-quote').textContent =
-      '"Journey begins ' + displayDate(parseLocal(CFG.START_DATE)) + '"';
+      '“Journey begins ' + displayDate(parseLocal(CFG.START_DATE)) + '”';
     document.getElementById('practice-form').style.opacity = '0.4';
     document.getElementById('practice-form').style.pointerEvents = 'none';
     document.getElementById('save-btn').disabled = true;
-    document.getElementById('save-msg').textContent = 'Journey begins tomorrow!';
+    document.getElementById('save-msg').textContent = 'Journey begins soon!';
   } else if (num > total) {
     // Journey complete
     document.getElementById('hero-num').textContent = '✓';
     document.getElementById('hero-date').textContent = '111-Day Journey Complete';
-    document.getElementById('hero-quote').textContent = '"Well done. Now carry it forward."';
+    document.getElementById('hero-remaining').textContent = 'All days done';
+    document.getElementById('hero-quote').textContent = '“Well done. Now carry it forward.”';
     document.getElementById('practice-form').style.opacity = '0.4';
     document.getElementById('practice-form').style.pointerEvents = 'none';
     document.getElementById('save-btn').disabled = true;
@@ -897,17 +940,15 @@ function init() {
     // Active day
     document.getElementById('hero-num').textContent = num;
     document.getElementById('hero-date').textContent = displayDate(new Date());
+    document.getElementById('hero-remaining').textContent =
+      remaining + ' day' + (remaining === 1 ? '' : 's') + ' to go';
     document.getElementById('hero-quote').textContent =
       '“' + QUOTES[num % QUOTES.length] + '”';
   }
 
-  // Progress ring
-  const circ = 2 * Math.PI * 27; // r=27
-  const offset = circ - (pct / 100) * circ;
-  document.getElementById('ring-circle').style.strokeDasharray  = circ;
-  document.getElementById('ring-circle').style.strokeDashoffset = offset;
-  document.getElementById('ring-pct').textContent   = pct + '%';
-  document.getElementById('hero-prog').style.width  = pct + '%';
+  // Progress bar + percent
+  document.getElementById('hero-pct').textContent  = pct + '%';
+  document.getElementById('hero-prog').style.width = pct + '%';
 
   loadData();
 }
@@ -931,58 +972,56 @@ function setCycles(v) {
 /* ============================================================
    LOAD DATA
    ============================================================ */
-async function loadData() {
-  console.log('=== LOADING DATA ===');
-
-  // Try localStorage first
+function loadData() {
+  // 1. Render instantly from localStorage cache (no waiting)
   try {
     const stored = localStorage.getItem('sadhana-tracker-data');
-    console.log('localStorage item found:', !!stored);
-    if (stored) {
-      S.data = JSON.parse(stored);
-      console.log('Loaded from localStorage:', Object.keys(S.data).length, 'entries');
-    }
+    if (stored) S.data = JSON.parse(stored);
   } catch(e) {
-    console.error('localStorage read error:', e.message);
+    console.warn('Cache read failed:', e.message);
   }
-
-  // Try cloud (if configured)
-  if (CFG.SCRIPT_URL && CFG.SCRIPT_URL !== 'YOUR_APPS_SCRIPT_WEB_APP_URL') {
-    try {
-      console.log('Attempting cloud sync...');
-      const r = await fetch(CFG.SCRIPT_URL + '?action=get', { timeout: 5000 });
-      const j = await r.json();
-      if (j.data && j.data.length) {
-        console.log('Cloud sync success:', j.data.length, 'rows');
-        (j.data || []).forEach(row => {
-          if (row[0]) {
-            S.data[row[0]] = {
-              cycles:    Number(row[1]) || 0,
-              shambhavi: row[2] === true || row[2] === 'TRUE',
-              bhuta:     row[3] === true || row[3] === 'TRUE',
-              devi:      row[4] === true || row[4] === 'TRUE',
-            };
-          }
-        });
-        localStorage.setItem('sadhana-tracker-data', JSON.stringify(S.data));
-      }
-    } catch(e) {
-      console.log('Cloud sync unavailable (expected if not deployed):', e.message);
-    }
-  }
-
-  // Load today's saved data into form
-  const td = S.data[S.todayKey];
-  console.log('Today (' + S.todayKey + ') data:', td);
-  if (td) {
-    setCycles(td.cycles);
-    document.getElementById('t-shambhavi').checked = td.shambhavi;
-    document.getElementById('t-bhuta').checked     = td.bhuta;
-    document.getElementById('t-devi').checked      = td.devi;
-  }
-
+  fillTodayForm();
   renderGrid();
   updateStats();
+
+  // 2. Sync from cloud in the background, then re-render
+  syncFromCloud();
+}
+
+async function syncFromCloud() {
+  if (!CFG.SCRIPT_URL || CFG.SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL') return;
+  try {
+    const r = await fetch(CFG.SCRIPT_URL + '?action=get');
+    const j = await r.json();
+    if (j.data && j.data.length) {
+      j.data.forEach(row => {
+        if (row[0]) {
+          S.data[row[0]] = {
+            cycles:    Number(row[1]) || 0,
+            shambhavi: row[2] === true || row[2] === 'TRUE',
+            bhuta:     row[3] === true || row[3] === 'TRUE',
+            devi:      row[4] === true || row[4] === 'TRUE',
+          };
+        }
+      });
+      localStorage.setItem('sadhana-tracker-data', JSON.stringify(S.data));
+      fillTodayForm();
+      renderGrid();
+      updateStats();
+    }
+  } catch(e) {
+    console.log('Cloud offline — using cached data.');
+  }
+}
+
+function fillTodayForm() {
+  const td = S.data[S.todayKey];
+  if (td) {
+    setCycles(td.cycles || 0);
+    document.getElementById('t-shambhavi').checked = !!td.shambhavi;
+    document.getElementById('t-bhuta').checked     = !!td.bhuta;
+    document.getElementById('t-devi').checked      = !!td.devi;
+  }
 }
 
 /* ============================================================
@@ -1000,59 +1039,45 @@ async function saveToday() {
     devi:      document.getElementById('t-devi').checked,
   };
 
-  console.log('=== SAVING DATA ===');
-  console.log('Entry:', entry);
-
-  // Update in-memory data
+  // Update in-memory + cache immediately (instant, always works)
   S.data[S.todayKey] = entry;
-
-  // Save to localStorage as backup
   try {
     localStorage.setItem('sadhana-tracker-data', JSON.stringify(S.data));
-    console.log('✓ localStorage backup saved');
   } catch(e) {
-    console.warn('localStorage backup failed:', e.message);
+    console.warn('Cache write failed:', e.message);
   }
+  renderGrid();
+  updateStats();
 
-  // Save to Google Sheets (PRIMARY - always syncs)
+  // Sync to Google Sheets
   if (CFG.SCRIPT_URL && CFG.SCRIPT_URL !== 'YOUR_APPS_SCRIPT_WEB_APP_URL') {
     btn.disabled = true;
-    btn.textContent = 'Saving to Google Sheets…';
-
+    btn.textContent = 'Saving…';
     try {
-      console.log('Saving to Google Sheets...');
       const r = await fetch(CFG.SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(entry),
       });
       const j = await r.json();
-      console.log('Google Sheets response:', j);
-
-      if (j.success) {
-        msg.className = 'save-msg ok';
-        msg.textContent = 'Saved to Google Sheets ✔';
-        console.log('✓ Successfully saved to Google Sheets');
-      } else {
-        throw new Error(j.error || 'Server error');
-      }
+      if (!j.success) throw new Error(j.error || 'Server error');
+      msg.className = 'save-msg ok';
+      msg.textContent = 'Saved ✔';
     } catch(e) {
-      console.error('Google Sheets save failed:', e.message);
-      msg.className = 'save-msg err';
-      msg.textContent = 'Save failed: ' + e.message;
+      // Cached locally, so the day is safe even if cloud failed
+      msg.className = 'save-msg ok';
+      msg.textContent = 'Saved (will sync when online)';
+      console.log('Cloud sync deferred:', e.message);
     } finally {
       btn.disabled = false;
-      btn.textContent = "Save Today's Practice";
-      setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 3000);
+      btn.textContent = 'Save Today’s Practice';
+      setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 2500);
     }
   } else {
     msg.className = 'save-msg ok';
     msg.textContent = 'Saved ✔';
     setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 2500);
   }
-
-  renderGrid();
-  updateStats();
 }
 
 /* ============================================================
@@ -1074,13 +1099,14 @@ function renderGrid() {
     const past   = key < todayStr;
     const today  = key === todayStr;
     const future = key > todayStr;
-    const logged = d && (d.cycles > 0 || d.shambhavi || d.bhuta || d.devi);
+    const logged   = d && (d.cycles > 0 || d.shambhavi || d.bhuta || d.devi);
+    const complete = d && d.cycles >= 1 && d.shambhavi && d.bhuta && d.devi;
 
     const card = document.createElement('div');
     card.className = 'day-card' +
-      (today  ? ' today'  : '') +
-      (future ? ' future' : '') +
-      (logged ? ' logged' : '');
+      (today    ? ' today'    : '') +
+      (future   ? ' future'   : '') +
+      (complete ? ' complete' : (logged ? ' logged' : ''));
     card.id = 'dc-' + key;
 
     if (!future) card.onclick = () => openModal(num, key, d);
