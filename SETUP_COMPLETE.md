@@ -192,6 +192,6 @@ function setupSheet() {
 ## Timeline
 
 - **Today:** Deploy Web App (10 min)
-- **Tomorrow:** Your 111-day journey begins!
+- **Tomorrow:** Your 111-day Yatra begins!
 
 Good luck with your sadhana! 🔥
