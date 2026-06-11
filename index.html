@@ -285,9 +285,193 @@
     .save-msg.ok  { color: var(--success); font-weight: 600; }
     .save-msg.err { color: var(--terracotta); font-weight: 600; }
 
+    /* ─── History section ───────────────────────────── */
+    .history {
+      background: var(--muted);
+      border-top: 1px solid var(--border);
+      padding: 28px 18px calc(44px + env(safe-area-inset-bottom));
+      display: flex;
+      justify-content: center;
+    }
+    .history-inner {
+      width: 100%;
+      max-width: 460px;
+    }
+    .history-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .history-title {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--dark);
+    }
+    .history-range {
+      font-size: 11px;
+      color: var(--light);
+    }
+
+    /* Stats row */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 10px 10px;
+    }
+    .stat-num {
+      font-family: var(--font-head);
+      font-weight: 900;
+      font-size: 22px;
+      line-height: 1;
+    }
+    .stat-lbl {
+      font-size: 9.5px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--light);
+      margin-top: 4px;
+    }
+
+    /* Legend */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      margin-bottom: 16px;
+    }
+    .leg-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--mid);
+    }
+    .leg-glyph { width: 16px; height: 16px; }
+    .leg-glyph.s-surya     { color: var(--orange); }
+    .leg-glyph.s-shambhavi { color: var(--crimson); }
+    .leg-glyph.s-bhuta     { color: var(--blue); }
+    .leg-glyph.s-devi      { color: var(--brown); }
+
+    /* Day grid */
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(62px, 1fr));
+      gap: 7px;
+    }
+    .day-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 6px 7px;
+      cursor: pointer;
+      transition: all 0.18s;
+      position: relative;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .day-card:hover:not(.future) {
+      border-color: var(--orange);
+      box-shadow: 0 2px 8px rgba(236,103,27,0.15);
+      transform: translateY(-1px);
+    }
+    .day-card.today  { border-color: var(--orange); border-width: 2px; }
+    .day-card.today::after {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--orange);
+    }
+    .day-card.future { opacity: 0.32; cursor: default; pointer-events: none; }
+    .day-card.logged { background: #FCF8F1; }
+    .day-card.complete {
+      background: linear-gradient(150deg, #FCEFE0, #FBF6EE);
+      border-color: rgba(236,103,27,0.3);
+    }
+    .day-card.milestone::before {
+      content: '✦';
+      position: absolute; top: 3px; right: 4px;
+      font-size: 8px;
+      color: var(--crimson);
+      opacity: 0.6;
+    }
+    .dc-num {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 14px;
+      text-align: center;
+      line-height: 1;
+    }
+    .dc-date {
+      font-size: 8.5px;
+      color: var(--light);
+      text-align: center;
+      margin: 2px 0 6px;
+    }
+    .dc-glyphs {
+      display: flex;
+      justify-content: center;
+      gap: 3px;
+    }
+    .dcg {
+      width: 13px; height: 13px;
+      color: rgba(140,94,60,0.18);
+      transition: color 0.18s;
+    }
+    .dcg.on.s-surya     { color: var(--orange); }
+    .dcg.on.s-shambhavi { color: var(--crimson); }
+    .dcg.on.s-bhuta     { color: var(--blue); }
+    .dcg.on.s-devi      { color: var(--brown); }
+
+    /* Modal */
+    .overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.42);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(2px);
+    }
+    .overlay.open { display: flex; }
+    .modal {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 26px;
+      width: 340px;
+      max-width: 100%;
+      box-shadow: 0 12px 40px rgba(90,60,30,0.18);
+      position: relative;
+    }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: var(--muted); border: none;
+      width: 28px; height: 28px;
+      border-radius: 50%; font-size: 16px;
+      color: var(--mid);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-title  { font-family: var(--font-head); font-weight: 700; font-size: 19px; margin-bottom: 2px; }
+    .modal-date   { font-size: 12px; color: var(--light); margin-bottom: 18px; }
+    .modal-row    { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--muted); }
+    .modal-row:last-child { border-bottom: none; }
+    .modal-label  { font-family: var(--font-head); font-weight: 700; font-size: 13.5px; }
+    .modal-val    { font-size: 12px; margin-top: 2px; }
+    .modal-dot    { width: 9px; height: 9px; border-radius: 50%; }
+
     @media (max-width: 600px) {
       .greeting { font-size: 23px; }
       .header-title { font-size: 15px; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -401,6 +585,54 @@
     </div>
   </div>
 </main>
+
+<!-- ── History: stats + 111-day grid ── -->
+<section class="history">
+  <div class="history-inner">
+    <div class="history-head">
+      <div class="history-title">111-Day Journey</div>
+      <div class="history-range" id="history-range">—</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num" id="st-done" style="color:var(--orange)">0</div>
+        <div class="stat-lbl">Days Done</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="st-streak" style="color:var(--blue)">0</div>
+        <div class="stat-lbl">Streak</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="st-shambhavi" style="color:var(--crimson)">0%</div>
+        <div class="stat-lbl">Shambhavi</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="st-surya" style="color:var(--brown)">0</div>
+        <div class="stat-lbl">Surya Cyc.</div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="leg-item"><svg class="leg-glyph s-surya"><use href="#g-surya"/></svg>Surya</div>
+      <div class="leg-item"><svg class="leg-glyph s-shambhavi"><use href="#g-shambhavi"/></svg>Shambhavi</div>
+      <div class="leg-item"><svg class="leg-glyph s-bhuta"><use href="#g-bhuta"/></svg>Bhuta</div>
+      <div class="leg-item"><svg class="leg-glyph s-devi"><use href="#g-devi"/></svg>Devi</div>
+    </div>
+
+    <div class="days-grid" id="days-grid"></div>
+  </div>
+</section>
+
+<!-- ── Day detail modal ── -->
+<div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
+    <div class="modal-title" id="m-title">Day 1</div>
+    <div class="modal-date"  id="m-date"></div>
+    <div id="m-body"></div>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════════════════ SCRIPT -->
 <script>
@@ -527,6 +759,8 @@ function loadData() {
     if (stored) S.data = JSON.parse(stored);
   } catch(e) { console.warn('Cache read failed:', e.message); }
   fillToday();
+  renderGrid();
+  updateStats();
   syncFromCloud();
 }
 
@@ -589,6 +823,8 @@ async function syncFromCloud() {
     if (merged) {
       localStorage.setItem('sadhana-tracker-data', JSON.stringify(S.data));
       fillToday();
+      renderGrid();
+      updateStats();
     }
   } catch(e) {
     console.log('Cloud offline — using cached data.', e.message);
@@ -614,6 +850,8 @@ async function saveToday() {
   S.data[S.todayKey] = entry;
   try { localStorage.setItem('sadhana-tracker-data', JSON.stringify(S.data)); }
   catch(e) { console.warn('Cache write failed:', e.message); }
+  renderGrid();
+  updateStats();
 
   if (CFG.SCRIPT_URL && CFG.SCRIPT_URL !== 'YOUR_APPS_SCRIPT_WEB_APP_URL') {
     btn.disabled = true;
@@ -654,6 +892,125 @@ function celebrate(btn) {
   btn.classList.add('pulse');
   buzz(15);
 }
+
+/* ============================================================
+   HISTORY GRID
+   ============================================================ */
+function shortDate(date) {
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function renderGrid() {
+  const grid     = document.getElementById('days-grid');
+  const start    = parseLocal(CFG.START_DATE);
+  const todayStr = todayKey();
+  grid.innerHTML = '';
+
+  // Date range label
+  const endDate = new Date(start);
+  endDate.setDate(endDate.getDate() + CFG.TOTAL_DAYS - 1);
+  document.getElementById('history-range').textContent =
+    shortDate(start) + ' – ' + shortDate(endDate);
+
+  for (let i = 0; i < CFG.TOTAL_DAYS; i++) {
+    const date    = new Date(start);
+    date.setDate(date.getDate() + i);
+    const key     = toKey(date);
+    const num     = i + 1;
+    const d       = S.data[key];
+    const isToday = key === todayStr;
+    const future  = key > todayStr;
+    const logged  = d && (d.cycles > 0 || d.shambhavi || d.bhuta || d.devi);
+    const complete = d && d.cycles >= 1 && d.shambhavi && d.bhuta && d.devi;
+    const milestone = [21, 40, 48, 90, 111].includes(num);
+
+    const card = document.createElement('div');
+    card.className = 'day-card' +
+      (isToday    ? ' today'     : '') +
+      (future     ? ' future'    : '') +
+      (milestone  ? ' milestone' : '') +
+      (complete   ? ' complete'  : logged ? ' logged' : '');
+
+    if (!future) card.onclick = () => openModal(num, key, d);
+
+    const g = (sym, cls, on) =>
+      `<svg class="dcg s-${cls}${on ? ' on' : ''}"><use href="#g-${sym}"/></svg>`;
+
+    card.innerHTML =
+      `<div class="dc-num" style="color:${isToday ? 'var(--orange)' : 'var(--dark)'}">${num}</div>` +
+      `<div class="dc-date">${shortDate(date)}</div>` +
+      `<div class="dc-glyphs">` +
+        g('surya',     'surya',     d && d.cycles >= 1) +
+        g('shambhavi', 'shambhavi', !!d?.shambhavi) +
+        g('bhuta',     'bhuta',     !!d?.bhuta) +
+        g('devi',      'devi',      !!d?.devi) +
+      `</div>`;
+
+    grid.appendChild(card);
+  }
+}
+
+/* ============================================================
+   STATS
+   ============================================================ */
+function updateStats() {
+  const start    = parseLocal(CFG.START_DATE);
+  const todayStr = todayKey();
+  let done = 0, streak = 0, counting = true, shambhCt = 0, suryaTot = 0;
+
+  for (let i = CFG.TOTAL_DAYS - 1; i >= 0; i--) {
+    const date = new Date(start);
+    date.setDate(date.getDate() + i);
+    const key = toKey(date);
+    if (key > todayStr) continue;
+    const d      = S.data[key];
+    const logged = d && (d.cycles > 0 || d.shambhavi || d.bhuta || d.devi);
+    if (logged) {
+      done++;
+      if (counting) streak++;
+      if (d.shambhavi) shambhCt++;
+      suryaTot += (d.cycles || 0);
+    } else {
+      counting = false;
+    }
+  }
+
+  document.getElementById('st-done').textContent      = done;
+  document.getElementById('st-streak').textContent    = streak;
+  document.getElementById('st-shambhavi').textContent =
+    done > 0 ? Math.round((shambhCt / done) * 100) + '%' : '0%';
+  document.getElementById('st-surya').textContent     = suryaTot;
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+function openModal(num, key, d) {
+  document.getElementById('m-title').textContent = 'Day ' + num;
+  document.getElementById('m-date').textContent  =
+    parseLocal(key).toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+
+  const rows = [
+    { label:'Surya Kriya',         val: d ? `${d.cycles} / 3 cycles`          : '—', color:'var(--orange)',  on: d?.cycles > 0 },
+    { label:'Shambhavi Mahamudra', val: d?.shambhavi ? 'Completed' : 'Not logged', color:'var(--crimson)', on: d?.shambhavi },
+    { label:'Bhuta Shuddhi',       val: d?.bhuta     ? 'Completed' : 'Not logged', color:'var(--blue)',    on: d?.bhuta },
+    { label:'Devi Sadhana',        val: d?.devi      ? 'Completed' : 'Not logged', color:'var(--brown)',   on: d?.devi },
+  ];
+
+  document.getElementById('m-body').innerHTML = rows.map(r => `
+    <div class="modal-row">
+      <div>
+        <div class="modal-label">${r.label}</div>
+        <div class="modal-val" style="color:${r.on ? r.color : 'var(--light)'}">${r.val}</div>
+      </div>
+      <div class="modal-dot" style="background:${r.on ? r.color : 'var(--muted)'}"></div>
+    </div>`).join('');
+
+  document.getElementById('overlay').classList.add('open');
+}
+function closeModal() { document.getElementById('overlay').classList.remove('open'); }
+function handleOverlayClick(e) { if (e.target === document.getElementById('overlay')) closeModal(); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 /* ============================================================
    Header shadow on scroll (subtle)
