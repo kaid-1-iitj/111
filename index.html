@@ -43,12 +43,15 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { -webkit-text-size-adjust: 100%; }
+
+    /* App-shell layout: header + scrollable view + tab bar, no page scroll */
+    html, body { height: 100%; overflow: hidden; -webkit-text-size-adjust: 100%; }
     body {
       font-family: var(--font-body);
       background: var(--bg);
       color: var(--dark);
-      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
       -webkit-font-smoothing: antialiased;
     }
     button { font-family: inherit; cursor: pointer; }
@@ -60,16 +63,60 @@
       justify-content: space-between;
       gap: 14px;
       padding:
-        calc(env(safe-area-inset-top) + 14px)
-        max(20px, env(safe-area-inset-right)) 14px
+        calc(env(safe-area-inset-top) + 12px)
+        max(20px, env(safe-area-inset-right)) 12px
         max(20px, env(safe-area-inset-left));
       background: var(--dark);
-      position: sticky;
-      top: 0;
-      z-index: 20;
+      flex-shrink: 0;
       transition: box-shadow 0.3s;
+      z-index: 20;
     }
     .header.scrolled { box-shadow: 0 3px 22px rgba(0,0,0,0.28); }
+
+    /* ─── Views + tab bar ────────────────────────────── */
+    .app-body {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+    .view {
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .view.hidden { display: none; }
+
+    /* Bottom tab bar */
+    .tab-bar {
+      display: flex;
+      background: var(--dark);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-bottom: env(safe-area-inset-bottom);
+      flex-shrink: 0;
+    }
+    .tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 10px 0;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.38);
+      font-size: 10px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      font-family: var(--font-head);
+      font-weight: 700;
+      transition: color 0.18s;
+      -webkit-tap-highlight-color: transparent;
+      cursor: pointer;
+    }
+    .tab.active { color: var(--orange); }
+    .tab svg { width: 22px; height: 22px; }
     .header-brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
     .header-icon {
       width: 32px; height: 32px;
@@ -103,7 +150,7 @@
     .stage {
       display: flex;
       justify-content: center;
-      padding: 20px 18px calc(36px + env(safe-area-inset-bottom));
+      padding: 20px 18px 36px;
     }
     .card { width: 100%; max-width: 460px; }
 
@@ -319,10 +366,10 @@
     /* ─── History section ───────────────────────────── */
     .history {
       background: var(--muted);
-      border-top: 1px solid var(--border);
-      padding: 28px 18px calc(44px + env(safe-area-inset-bottom));
+      padding: 22px 18px 44px;
       display: flex;
       justify-content: center;
+      min-height: 100%;
     }
     .history-inner {
       width: 100%;
@@ -550,7 +597,11 @@
   <div class="header-left" id="header-left">&nbsp;</div>
 </header>
 
-<!-- ── Today ── -->
+<!-- ── App body: swappable views ── -->
+<div class="app-body">
+
+<!-- VIEW: Today -->
+<div class="view" id="view-today">
 <main class="stage">
   <div class="card">
 
@@ -627,8 +678,10 @@
     </div>
   </div>
 </main>
+</div><!-- /view-today -->
 
-<!-- ── History: stats + 111-day grid ── -->
+<!-- VIEW: Journey (history grid) -->
+<div class="view hidden" id="view-history">
 <section class="history">
   <div class="history-inner">
     <div class="history-head">
@@ -665,8 +718,30 @@
     <div class="days-grid" id="days-grid"></div>
   </div>
 </section>
+</div><!-- /view-history -->
 
-<!-- ── Day detail modal ── -->
+</div><!-- /app-body -->
+
+<!-- ── Bottom tab bar ── -->
+<nav class="tab-bar" role="navigation" aria-label="App navigation">
+  <button class="tab active" id="tab-today" onclick="switchTab('today')" aria-label="Today">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 3C12 3 7 8 7 13C7 16.3 9.2 18.5 12 18.5C14.8 18.5 17 16.3 17 13C17 8 12 3 12 3Z"/>
+    </svg>
+    Today
+  </button>
+  <button class="tab" id="tab-history" onclick="switchTab('history')" aria-label="Journey">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <rect x="3"  y="3"  width="8" height="8" rx="1.5" opacity="1"/>
+      <rect x="13" y="3"  width="8" height="8" rx="1.5" opacity="1"/>
+      <rect x="3"  y="13" width="8" height="8" rx="1.5" opacity="1"/>
+      <rect x="13" y="13" width="8" height="8" rx="1.5" opacity="1"/>
+    </svg>
+    Journey
+  </button>
+</nav>
+
+<!-- ── Day detail modal (outside app-body so it layers above everything) ── -->
 <div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
   <div class="modal" role="dialog" aria-modal="true">
     <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
@@ -925,7 +1000,7 @@ async function saveToday() {
       console.warn('Cloud save failed. Check Apps Script deployment.', e.message);
     } finally {
       btn.disabled = false;
-      btn.textContent = "I'm done for today";
+      btn.textContent = "Shambhoo";
       setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 3500);
     }
   } else {
@@ -1063,11 +1138,25 @@ function handleOverlayClick(e) { if (e.target === document.getElementById('overl
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 /* ============================================================
-   Header shadow on scroll (subtle)
+   TAB SWITCHING
    ============================================================ */
-window.addEventListener('scroll', () => {
-  document.getElementById('header').classList.toggle('scrolled', window.scrollY > 8);
-}, { passive: true });
+function switchTab(name) {
+  const isHistory = name === 'history';
+  document.getElementById('view-today').classList.toggle('hidden', isHistory);
+  document.getElementById('view-history').classList.toggle('hidden', !isHistory);
+  document.getElementById('tab-today').classList.toggle('active', !isHistory);
+  document.getElementById('tab-history').classList.toggle('active', isHistory);
+  if (isHistory) { renderGrid(); updateStats(); }
+}
+
+/* ============================================================
+   Header shadow — listen on the active view's scroll
+   ============================================================ */
+['view-today', 'view-history'].forEach(id => {
+  document.getElementById(id).addEventListener('scroll', function() {
+    document.getElementById('header').classList.toggle('scrolled', this.scrollTop > 8);
+  }, { passive: true });
+});
 
 /* ============================================================
    PWA
