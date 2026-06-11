@@ -150,9 +150,12 @@
     .stage {
       display: flex;
       justify-content: center;
+      align-items: flex-start;
       padding: 20px 18px 16px;
+      min-height: 100%;
     }
-    .card { width: 100%; max-width: 460px; }
+    .card { width: 100%; max-width: 460px; display: flex; flex-direction: column; }
+    #view-today { display: flex; flex-direction: column; }
 
     /* ─── Compact hero: left col + right col ─────────── */
     .hero-flex {
@@ -326,7 +329,7 @@
     }
 
     /* ─── CTA ─────────────────────────────────────────── */
-    .cta-wrap { margin-top: 18px; }
+    .cta-wrap { margin-top: auto; padding-top: 18px; }
     .cta {
       width: 100%;
       padding: 17px;
@@ -680,7 +683,7 @@
     </div>
 
     <div class="cta-wrap">
-      <button class="cta" id="cta" onclick="saveToday()" disabled>I'm done for today</button>
+      <button class="cta" id="cta" onclick="saveToday()" disabled>Shambhoo</button>
       <div class="save-msg" id="save-msg"></div>
     </div>
   </div>
