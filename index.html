@@ -103,48 +103,79 @@
     .stage {
       display: flex;
       justify-content: center;
-      padding: 30px 18px calc(40px + env(safe-area-inset-bottom));
+      padding: 20px 18px calc(36px + env(safe-area-inset-bottom));
     }
-    .card {
-      width: 100%;
-      max-width: 460px;
+    .card { width: 100%; max-width: 460px; }
+
+    /* ─── Compact hero: left col + right col ─────────── */
+    .hero-flex {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .hero-left  { flex: 1; min-width: 0; }
+    .hero-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      flex-shrink: 0;
     }
 
     .greeting {
       font-family: var(--font-head);
       font-weight: 700;
-      font-size: 26px;
+      font-size: 19px;
       color: var(--dark);
-      letter-spacing: -0.3px;
+      letter-spacing: -0.2px;
     }
     .today-date {
-      font-size: 14.5px;
+      font-size: 13px;
       color: var(--mid);
-      margin-top: 6px;
-      margin-bottom: 20px;
+      margin-top: 3px;
+      margin-bottom: 14px;
     }
 
-    /* ─── Day number + sun row (no progress bar) ─────── */
-    .day-row {
+    /* 4 live completion dots — left col, below date */
+    .today-dots {
       display: flex;
-      align-items: flex-start;   /* both tops flush — sun level with the number */
-      justify-content: space-between;
-      margin-bottom: 24px;
+      align-items: center;
+      gap: 6px;
     }
+    .tdot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(140,94,60,0.18);
+      transition: background 0.25s, transform 0.2s;
+      flex-shrink: 0;
+    }
+    .tdot.on              { transform: scale(1.15); }
+    .tdot.on.td-surya     { background: var(--orange); }
+    .tdot.on.td-shambhavi { background: var(--crimson); }
+    .tdot.on.td-bhuta     { background: var(--blue); }
+    .tdot.on.td-devi      { background: var(--brown); }
+    .tdot-label {
+      font-size: 11px;
+      color: var(--light);
+      margin-left: 2px;
+      font-weight: 600;
+    }
+
+    /* Day number + sun — right col */
     .day-num {
       font-family: var(--font-head);
       font-weight: 900;
-      font-size: 72px;
+      font-size: 60px;
       line-height: 0.88;
       color: var(--orange);
-      letter-spacing: -3px;
+      letter-spacing: -2px;
     }
     .day-sun {
-      width: 68px; height: 68px;
+      width: 56px; height: 56px;
       color: var(--orange);
-      opacity: 0.22;
-      flex-shrink: 0;
-      margin-top: 2px;  /* optically level with top of the number */
+      opacity: 0.2;
     }
 
     /* ─── Practice cards (tap to complete) ───────────── */
@@ -522,15 +553,26 @@
 <!-- ── Today ── -->
 <main class="stage">
   <div class="card">
-    <div class="greeting" id="greeting">&nbsp;</div>
-    <div class="today-date" id="today-date">&nbsp;</div>
 
-    <!-- Day number left, sun right, tops aligned, no progress bar -->
-    <div class="day-row" id="day-row">
-      <div class="day-num" id="day-num">—</div>
-      <svg class="day-sun" viewBox="0 0 24 24" aria-hidden="true">
-        <use href="#g-surya"/>
-      </svg>
+    <!-- Compact hero: greeting+date+dots left, day number+sun right -->
+    <div class="hero-flex">
+      <div class="hero-left">
+        <div class="greeting" id="greeting">&nbsp;</div>
+        <div class="today-date" id="today-date">&nbsp;</div>
+        <div class="today-dots">
+          <span class="tdot td-surya"     id="td-surya"></span>
+          <span class="tdot td-shambhavi" id="td-shambhavi"></span>
+          <span class="tdot td-bhuta"     id="td-bhuta"></span>
+          <span class="tdot td-devi"      id="td-devi"></span>
+          <span class="tdot-label" id="td-label">0 of 4</span>
+        </div>
+      </div>
+      <div class="hero-right" id="day-row">
+        <div class="day-num" id="day-num">—</div>
+        <svg class="day-sun" viewBox="0 0 24 24" aria-hidden="true">
+          <use href="#g-surya"/>
+        </svg>
+      </div>
     </div>
 
     <div class="practices">
@@ -733,17 +775,25 @@ function adjCycles(d) {
 
 function renderCards() {
   document.getElementById('cval').textContent = S.cycles;
-  setDone('pc-surya',     S.cycles >= 1);
-  setDone('pc-shambhavi', S.shambhavi);
-  setDone('pc-bhuta',     S.bhuta);
-  setDone('pc-devi',      S.devi);
 
-  // CTA activates once at least one practice is marked
-  const any = S.cycles >= 1 || S.shambhavi || S.bhuta || S.devi;
-  document.getElementById('cta').disabled = !any;
-}
-function setDone(id, on) {
-  document.getElementById(id).classList.toggle('done', !!on);
+  const state = {
+    surya:     S.cycles >= 1,
+    shambhavi: S.shambhavi,
+    bhuta:     S.bhuta,
+    devi:      S.devi,
+  };
+
+  Object.entries(state).forEach(([k, on]) => {
+    document.getElementById('pc-' + k).classList.toggle('done', on);
+    document.getElementById('td-' + k).classList.toggle('on',   on);
+  });
+
+  // Completion dots label
+  const count = Object.values(state).filter(Boolean).length;
+  document.getElementById('td-label').textContent = count + ' of 4';
+
+  document.getElementById('cta').disabled =
+    !(state.surya || state.shambhavi || state.bhuta || state.devi);
 }
 
 /* Haptic feedback (Android; ignored elsewhere) */
