@@ -7,7 +7,7 @@
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#2A1E14" />
+  <meta name="theme-color" content="#995F2F" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Today's Practice" />
@@ -16,7 +16,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&family=Open+Sans:wght@300;400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&family=Open+Sans:wght@300;400;600&family=Dancing+Script:wght@700&family=Lora:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet" />
 
   <style>
     /* ─── Design Tokens ─────────────────────────────── */
@@ -38,6 +38,7 @@
       --success:    #2E7D32;
       --font-head:  'Roboto', sans-serif;
       --font-body:  'Open Sans', sans-serif;
+      --font-serif: 'Lora', Georgia, serif;
       --radius:     16px;
       --shadow:     0 2px 14px rgba(90,60,30,0.06);
     }
@@ -66,7 +67,7 @@
         calc(env(safe-area-inset-top) + 12px)
         max(20px, env(safe-area-inset-right)) 12px
         max(20px, env(safe-area-inset-left));
-      background: #995F2F;
+      background: linear-gradient(160deg, #8A5226 0%, #995F2F 55%, #A86B36 100%);
       flex-shrink: 0;
       transition: box-shadow 0.3s;
       z-index: 20;
@@ -175,9 +176,9 @@
     }
 
     .greeting {
-      font-family: var(--font-head);
-      font-weight: 700;
-      font-size: 19px;
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: 24px;
       color: var(--dark);
       letter-spacing: -0.2px;
     }
@@ -213,19 +214,49 @@
       font-weight: 600;
     }
 
-    /* Day number + sun — right col */
-    .day-num {
+    /* Day progress ring — right col */
+    .day-ring {
+      position: relative;
+      width: 74px; height: 74px;
+    }
+    .day-ring svg {
+      width: 100%; height: 100%;
+      transform: rotate(-90deg);
+    }
+    .ring-bg, .ring-fg {
+      fill: none;
+      stroke-width: 4.5;
+      stroke-linecap: round;
+    }
+    .ring-bg { stroke: rgba(140,94,60,0.14); }
+    .ring-fg {
+      stroke: var(--orange);
+      stroke-dasharray: 194.8;
+      stroke-dashoffset: 194.8;
+      transition: stroke-dashoffset 0.9s ease;
+    }
+    .ring-center {
+      position: absolute; inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .ring-num {
       font-family: var(--font-head);
       font-weight: 900;
-      font-size: 60px;
-      line-height: 0.88;
+      font-size: 26px;
+      line-height: 1;
       color: var(--orange);
-      letter-spacing: -2px;
+      letter-spacing: -0.5px;
     }
-    .day-sun {
-      width: 56px; height: 56px;
-      color: var(--orange);
-      opacity: 0.2;
+    .ring-lbl {
+      font-size: 8px;
+      letter-spacing: 1.4px;
+      font-weight: 700;
+      color: var(--light);
+      text-transform: uppercase;
+      margin-top: 2px;
     }
 
     /* ─── Practice cards (tap to complete) ───────────── */
@@ -258,13 +289,24 @@
     .pcard.done.s-bhuta          { border-color: rgba(27,110,200,0.35); background: #F0F5FF; }
     .pcard.done.s-devi           { border-color: rgba(139,94,60,0.40); background: #FBF6F0; }
 
+    .pglyph-chip {
+      width: 46px; height: 46px;
+      flex-shrink: 0;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.22s;
+    }
+    .pcard.s-surya     .pglyph-chip { background: rgba(236,103,27,0.10); }
+    .pcard.s-shambhavi .pglyph-chip { background: rgba(200,50,50,0.09); }
+    .pcard.s-bhuta     .pglyph-chip { background: rgba(27,110,200,0.09); }
+    .pcard.s-devi      .pglyph-chip { background: rgba(139,94,60,0.11); }
     .pglyph {
-      width: 30px; height: 30px;
+      width: 26px; height: 26px;
       flex-shrink: 0;
       color: var(--pc);
       transition: transform 0.2s;
     }
-    .pcard.done .pglyph { transform: scale(1.08); }
+    .pcard.done .pglyph { transform: scale(1.1); }
 
     .pmeta { flex: 1; min-width: 0; }
     .pname {
@@ -346,10 +388,10 @@
       font-family: Georgia, serif;
     }
     .quote-text {
-      font-family: 'Open Sans', sans-serif;
+      font-family: var(--font-serif);
       font-style: italic;
-      font-size: 14px;
-      line-height: 1.65;
+      font-size: 15px;
+      line-height: 1.6;
       color: var(--mid);
       text-align: center;
       margin-top: 18px;
@@ -369,14 +411,14 @@
     .cta {
       width: 100%;
       padding: 17px;
-      background: var(--orange);
+      background: linear-gradient(135deg, #EC671B, #D2691E);
       color: #fff;
       border: none;
-      border-radius: var(--radius);
+      border-radius: 999px;
       font-family: var(--font-head);
       font-weight: 700;
-      font-size: 15px;
-      letter-spacing: 0.3px;
+      font-size: 16px;
+      letter-spacing: 0.5px;
       transition: background 0.2s, transform 0.12s, box-shadow 0.2s;
     }
     .cta:not(:disabled):active { transform: scale(0.99); }
@@ -586,7 +628,7 @@
     .modal-dot    { width: 9px; height: 9px; border-radius: 50%; }
 
     @media (max-width: 600px) {
-      .greeting { font-size: 23px; }
+      .greeting { font-size: 26px; }
       .header-title { font-size: 15px; }
       .stats { grid-template-columns: repeat(2, 1fr); }
     }
@@ -665,7 +707,16 @@
         </div>
       </div>
       <div class="hero-right" id="day-row">
-        <div class="day-num" id="day-num">—</div>
+        <div class="day-ring">
+          <svg viewBox="0 0 72 72" aria-hidden="true">
+            <circle class="ring-bg" cx="36" cy="36" r="31"/>
+            <circle class="ring-fg" cx="36" cy="36" r="31" id="ring-fg"/>
+          </svg>
+          <div class="ring-center">
+            <div class="ring-num" id="day-num">—</div>
+            <div class="ring-lbl">day</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -677,7 +728,7 @@
     <div class="practices">
       <!-- Surya Kriya — keeps its cycle counter -->
       <div class="pcard s-surya" id="pc-surya">
-        <svg class="pglyph"><use href="#g-surya"/></svg>
+        <span class="pglyph-chip"><svg class="pglyph"><use href="#g-surya"/></svg></span>
         <div class="pmeta">
           <div class="pname">Surya Kriya</div>
           <div class="pdesc">Number of cycles</div>
@@ -691,7 +742,7 @@
 
       <!-- Shambhavi -->
       <div class="pcard tap s-shambhavi" id="pc-shambhavi" onclick="toggleP('shambhavi')">
-        <svg class="pglyph"><use href="#g-shambhavi"/></svg>
+        <span class="pglyph-chip"><svg class="pglyph"><use href="#g-shambhavi"/></svg></span>
         <div class="pmeta">
           <div class="pname">Shambhavi Mahamudra</div>
           <div class="pdesc">21-min kriya</div>
@@ -701,7 +752,7 @@
 
       <!-- Bhuta Shuddhi -->
       <div class="pcard tap s-bhuta" id="pc-bhuta" onclick="toggleP('bhuta')">
-        <svg class="pglyph"><use href="#g-bhuta"/></svg>
+        <span class="pglyph-chip"><svg class="pglyph"><use href="#g-bhuta"/></svg></span>
         <div class="pmeta">
           <div class="pname">Bhuta Shuddhi</div>
           <div class="pdesc">Elemental purification</div>
@@ -711,7 +762,7 @@
 
       <!-- Devi Sadhana -->
       <div class="pcard tap s-devi" id="pc-devi" onclick="toggleP('devi')">
-        <svg class="pglyph"><use href="#g-devi"/></svg>
+        <span class="pglyph-chip"><svg class="pglyph"><use href="#g-devi"/></svg></span>
         <div class="pmeta">
           <div class="pname">Devi Sadhana</div>
           <div class="pdesc">Linga Bhairavi offering</div>
@@ -886,12 +937,17 @@ function init() {
   document.getElementById('today-date').textContent =
     now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
-  // Day number + sun row
+  // Day progress ring
   const num  = dayNum(S.todayKey);
   const dayNumEl = document.getElementById('day-num');
   const dayRow   = document.getElementById('day-row');
   if (num >= 1 && num <= CFG.TOTAL_DAYS) {
     dayNumEl.textContent = num;
+    // Fill the ring proportional to the journey (after paint, so it animates)
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      document.getElementById('ring-fg').style.strokeDashoffset =
+        (194.8 * (1 - num / CFG.TOTAL_DAYS)).toFixed(1);
+    }));
   } else {
     dayRow.style.display = 'none';
   }
