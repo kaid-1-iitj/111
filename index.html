@@ -744,8 +744,7 @@
     .sec-pill { font-size: 12px; color: var(--mid); background: var(--muted); padding: 6px 12px; border-radius: 999px; }
 
     .practices { gap: 9px; }
-    .pcard { padding: 11px 16px 11px 14px; border-left: 4px solid var(--pc); }
-    .pcard.s-surya, .pcard.s-shambhavi, .pcard.s-bhuta, .pcard.s-devi { border-left-color: var(--pc) !important; }
+    .pcard { padding: 11px 16px; }
     .pglyph-chip { width: 42px; height: 42px; }
     .pcheck { width: 30px; height: 30px; }
 
@@ -1175,7 +1174,7 @@ function refreshHero() {
   document.getElementById('day-num').textContent = st.streak;
   document.getElementById('hstreak').classList.toggle('lit', doneCount(S.data[S.todayKey]) > 0);
   document.getElementById('header-left').innerHTML =
-    `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/></svg><span><b>◆ ${st.points}</b> · ${st.days}/${CFG.GOAL_DAYS}</span>`;
+    `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/></svg><span><b>◆ ${st.points}</b></span>`;
 }
 
 /* ============================================================
