@@ -700,6 +700,10 @@
       .header-title { font-size: 15px; }
     }
 
+    .goal-bar { height: 7px; border-radius: 999px; background: rgba(140,94,60,0.16); overflow: hidden; }
+    .goal-fill { height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, #EC671B, #D2691E); transition: width 0.6s ease; }
+    .goal-sub { font-size: 11px; color: var(--light); margin: 6px 0 14px; }
+
     /* ─── Today: fits one screen, never scrolls ─────── */
     .stage { height: 100%; min-height: 0; }
     .card { height: 100%; }
@@ -873,9 +877,11 @@
 <section class="history">
   <div class="history-inner">
     <div class="history-head">
-      <div class="history-title">Your Yatra</div>
+      <div class="history-title">Road to 1008</div>
       <div class="history-range" id="history-range">—</div>
     </div>
+    <div class="goal-bar"><div class="goal-fill" id="goal-fill"></div></div>
+    <div class="goal-sub" id="goal-sub"></div>
 
     <div class="heat-wrap">
       <div class="heat-scroll" id="heat-scroll">
@@ -954,6 +960,7 @@ const CFG = {
   TICKET_COST: 10,
   TICKETS_PER_MONTH: 3,
   REPAIR_WINDOW_DAYS: 30,
+  GOAL_DAYS: 1008,                   // Road to 1008 days of practice
   MILESTONES: [7, 21, 40, 48, 90, 111, 180, 365],
 };
 
@@ -1106,7 +1113,7 @@ function refreshHero() {
   document.getElementById('ring-fg').style.strokeDashoffset =
     (194.8 * (1 - Math.min(1, st.streak / next))).toFixed(1);
   document.getElementById('header-left').innerHTML =
-    `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/></svg><span><b>◆ ${st.points}</b> · Day ${dayNum(S.todayKey)}</span>`;
+    `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/></svg><span><b>◆ ${st.points}</b> · ${st.days}/${CFG.GOAL_DAYS}</span>`;
 }
 
 /* ============================================================
@@ -1367,8 +1374,12 @@ function renderHeatmap() {
   months.innerHTML = labels;
   months.style.width = weeks * COL + 'px';
 
-  document.getElementById('history-range').textContent =
-    'since ' + parseLocal(start).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const done = computeStats().days;
+  document.getElementById('history-range').textContent = `${done} / ${CFG.GOAL_DAYS}`;
+  document.getElementById('goal-fill').style.width = Math.min(100, done / CFG.GOAL_DAYS * 100) + '%';
+  document.getElementById('goal-sub').textContent =
+    `${Math.max(0, CFG.GOAL_DAYS - done)} days to go · since ` +
+    parseLocal(start).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 document.getElementById('heat-grid').addEventListener('click', e => {
   const k = e.target.dataset && e.target.dataset.key;
