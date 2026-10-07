@@ -476,20 +476,20 @@
     /* Stats row */
     .stats {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
-      margin-bottom: 18px;
+      margin-bottom: 12px;
     }
     .stat {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 12px 10px 10px;
+      padding: 8px 10px 7px;
     }
     .stat-num {
       font-family: var(--font-head);
       font-weight: 900;
-      font-size: 22px;
+      font-size: 18px;
       line-height: 1;
     }
     .stat-lbl {
@@ -685,7 +685,6 @@
     @media (max-width: 600px) {
       .greeting { font-size: 26px; }
       .header-title { font-size: 15px; }
-      .stats { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -844,18 +843,6 @@
       <div class="history-range" id="history-range">—</div>
     </div>
 
-    <div class="heat-wrap">
-      <div class="heat-scroll" id="heat-scroll">
-        <div class="heat-inner" id="heat-inner">
-          <div class="heat-months" id="heat-months"></div>
-          <div class="heat-grid" id="heat-grid"></div>
-        </div>
-      </div>
-      <div class="heat-legend">
-        Less <span class="hc"></span><span class="hc l1"></span><span class="hc l2"></span><span class="hc l3"></span><span class="hc l4"></span> More
-      </div>
-    </div>
-
     <div class="stats">
       <div class="stat">
         <div class="stat-num" id="st-streak" style="color:var(--orange)">0</div>
@@ -869,9 +856,17 @@
         <div class="stat-num" id="st-done" style="color:var(--crimson)">0</div>
         <div class="stat-lbl">Days</div>
       </div>
-      <div class="stat">
-        <div class="stat-num" id="st-points" style="color:var(--brown)">0</div>
-        <div class="stat-lbl">Points</div>
+    </div>
+
+    <div class="heat-wrap">
+      <div class="heat-scroll" id="heat-scroll">
+        <div class="heat-inner" id="heat-inner">
+          <div class="heat-months" id="heat-months"></div>
+          <div class="heat-grid" id="heat-grid"></div>
+        </div>
+      </div>
+      <div class="heat-legend">
+        Less <span class="hc"></span><span class="hc l1"></span><span class="hc l2"></span><span class="hc l3"></span><span class="hc l4"></span> More
       </div>
     </div>
 
@@ -1367,7 +1362,6 @@ function renderStats() {
   document.getElementById('st-streak').textContent = st.streak;
   document.getElementById('st-best').textContent   = st.best;
   document.getElementById('st-done').textContent   = st.days;
-  document.getElementById('st-points').textContent = st.points;
 }
 
 function inRepairWindow(key) {
