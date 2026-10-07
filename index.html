@@ -150,6 +150,9 @@
     }
     /* soft, warm, never alarming */
     .header-left {
+      background: none; border: none; font-family: inherit;
+      -webkit-tap-highlight-color: transparent;
+      display: flex; align-items: center; gap: 6px;
       text-align: right;
       font-size: 12px;
       line-height: 1.35;
@@ -166,11 +169,11 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      padding: 20px 18px calc(env(safe-area-inset-bottom) + 96px);
+      padding: 12px 18px calc(env(safe-area-inset-bottom) + 84px);
       min-height: 100%;
     }
     .card { width: 100%; max-width: 460px; display: flex; flex-direction: column; }
-    #view-today { display: flex; flex-direction: column; }
+    #view-today { display: flex; flex-direction: column; overflow: hidden; }
 
     /* ─── Compact hero: left col + right col ─────────── */
     .hero-flex {
@@ -616,17 +619,6 @@
     .cal-cell.l4 .cal-dots i.on { background: #fff; }
 
     /* ─── Ticket wallet ─────────────────────────────── */
-    .ticket-chip {
-      margin-top: 12px;
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 7px 12px; border-radius: 999px;
-      background: var(--cream); border: 1.5px solid rgba(236,103,27,0.35);
-      color: var(--terracotta);
-      font-family: var(--font-head); font-weight: 700; font-size: 12px;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .ticket-chip:active { transform: scale(0.97); }
-    .ticket-chip svg { width: 14px; height: 14px; }
     .wallet-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px; }
     .wallet-sub { font-size: 11px; color: var(--light); margin-bottom: 8px; }
     .wrow { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid var(--muted); }
@@ -707,6 +699,27 @@
       .greeting { font-size: 26px; }
       .header-title { font-size: 15px; }
     }
+
+    /* ─── Today: fits one screen, never scrolls ─────── */
+    .stage { height: 100%; min-height: 0; }
+    .card { height: 100%; }
+    .hero-flex { margin-bottom: 6px; }
+    .greeting { font-size: 22px; }
+    .today-date { margin-bottom: 8px; }
+    .day-ring { width: 64px; height: 64px; }
+    .ring-num { font-size: 22px; }
+    .hero-right { gap: 2px; }
+    .quote-card { margin-bottom: 8px; }
+    .quote-card::before { font-size: 48px; top: -6px; }
+    .quote-text { font-size: 13.5px; line-height: 1.5; margin-top: 12px; }
+    .quote-sig { font-size: 19px; margin-top: 4px; }
+    .practices { gap: 9px; }
+    .pcard { padding: 11px 16px; }
+    .pglyph-chip { width: 40px; height: 40px; }
+    .cta-wrap { padding-top: 10px; }
+    .cta { padding: 14px; }
+    .save-msg { margin-top: 4px; min-height: 14px; }
+    @media (max-height: 720px) { .quote-card { display: none; } }
   </style>
 </head>
 <body>
@@ -757,7 +770,7 @@
     </div>
     <div class="header-title">Today's Practice</div>
   </div>
-  <div class="header-left" id="header-left">&nbsp;</div>
+  <button class="header-left" id="header-left" onclick="openWallet()" aria-label="Open tickets">&nbsp;</button>
 </header>
 
 <!-- ── App body: swappable views ── -->
@@ -780,7 +793,6 @@
           <span class="tdot td-devi"      id="td-devi"></span>
           <span class="tdot-label" id="td-label">0 of 4</span>
         </div>
-        <button class="ticket-chip" id="ticket-chip" onclick="openWallet()" aria-label="Open tickets"></button>
       </div>
       <div class="hero-right" id="day-row">
         <div class="day-ring">
@@ -1094,8 +1106,7 @@ function refreshHero() {
   document.getElementById('ring-fg').style.strokeDashoffset =
     (194.8 * (1 - Math.min(1, st.streak / next))).toFixed(1);
   document.getElementById('header-left').innerHTML =
-    `<b>◆ ${st.points}</b> · Day ${dayNum(S.todayKey)}`;
-  renderChip();
+    `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/></svg><span><b>◆ ${st.points}</b> · Day ${dayNum(S.todayKey)}</span>`;
 }
 
 /* ============================================================
@@ -1413,13 +1424,6 @@ function boughtThisMonth(p) {
 }
 function canBuy(p) {
   return computeStats().points >= CFG.TICKET_COST && boughtThisMonth(p) < CFG.TICKETS_PER_MONTH;
-}
-
-function renderChip() {
-  const owned = S.tickets.filter(t => !t.usedFor).length;
-  document.getElementById('ticket-chip').innerHTML =
-    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/></svg>` +
-    `${owned} ticket${owned === 1 ? '' : 's'} · ◆ ${computeStats().points}`;
 }
 
 function openWallet() {
