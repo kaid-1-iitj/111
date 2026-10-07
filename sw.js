@@ -1,5 +1,5 @@
-/* 111 Days Sadhana — lightweight service worker */
-const CACHE = 'sadhana-v4';
+/* Sadhana Tracker — lightweight service worker */
+const CACHE = 'sadhana-v5';
 const SHELL = [
   './',
   './index.html',

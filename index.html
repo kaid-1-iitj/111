@@ -520,75 +520,128 @@
     .leg-glyph.s-bhuta     { color: var(--blue); }
     .leg-glyph.s-devi      { color: var(--brown); }
 
-    /* Day grid */
-    .days-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(62px, 1fr));
-      gap: 7px;
-    }
-    .day-card {
+    /* ─── Heatmap strip ─────────────────────────────── */
+    .heat-wrap {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 8px 6px 7px;
-      cursor: pointer;
-      transition: all 0.18s;
-      position: relative;
-      overflow: hidden;
-      -webkit-tap-highlight-color: transparent;
+      border-radius: 14px;
+      padding: 12px 12px 10px;
+      margin-bottom: 14px;
     }
-    .day-card:hover:not(.future) {
-      border-color: var(--orange);
-      box-shadow: 0 2px 8px rgba(236,103,27,0.15);
-      transform: translateY(-1px);
-    }
-    .day-card.today  { border-color: var(--orange); border-width: 2px; }
-    .day-card.today::after {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0;
-      height: 3px;
-      background: var(--orange);
-    }
-    .day-card.future { opacity: 0.32; cursor: default; pointer-events: none; }
-    .day-card.logged { background: #FCF8F1; }
-    .day-card.complete {
-      background: linear-gradient(150deg, #FCEFE0, #FBF6EE);
-      border-color: rgba(236,103,27,0.3);
-    }
-    .day-card.milestone::before {
-      content: '✦';
-      position: absolute; top: 3px; right: 4px;
-      font-size: 8px;
-      color: var(--crimson);
-      opacity: 0.6;
-    }
-    .dc-num {
-      font-family: var(--font-head);
-      font-weight: 700;
-      font-size: 14px;
-      text-align: center;
-      line-height: 1;
-    }
-    .dc-date {
-      font-size: 8.5px;
-      color: var(--light);
-      text-align: center;
-      margin: 2px 0 6px;
-    }
-    .dc-glyphs {
-      display: flex;
-      justify-content: center;
+    .heat-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .heat-scroll::-webkit-scrollbar { display: none; }
+    .heat-inner { display: inline-block; min-width: 100%; }
+    .heat-months { position: relative; height: 14px; font-size: 9.5px; color: var(--light); margin-left: 0; }
+    .heat-months span { position: absolute; top: 0; }
+    .heat-grid {
+      display: grid;
+      grid-auto-flow: column;
+      grid-template-rows: repeat(7, 13px);
+      grid-auto-columns: 13px;
       gap: 3px;
     }
-    .dcg {
-      width: 13px; height: 13px;
-      color: rgba(140,94,60,0.18);
-      transition: color 0.18s;
+    .hc { width: 13px; height: 13px; border-radius: 3px; background: var(--muted); }
+    .hc.l1 { background: #F8D9BE; }
+    .hc.l2 { background: #F4B57F; }
+    .hc.l3 { background: #EC8B4B; }
+    .hc.l4 { background: #D9540F; }
+    .hc.today { outline: 1.5px solid var(--dark); outline-offset: 1px; }
+    .hc.pad, .hc.future { visibility: hidden; }
+    .heat-legend {
+      display: flex; align-items: center; justify-content: flex-end; gap: 4px;
+      font-size: 9.5px; color: var(--light); margin-top: 8px;
     }
-    .dcg.on.s-surya     { color: var(--orange); }
-    .dcg.on.s-shambhavi { color: var(--crimson); }
-    .dcg.on.s-bhuta     { color: var(--blue); }
-    .dcg.on.s-devi      { color: var(--brown); }
+    .heat-legend .hc { width: 11px; height: 11px; }
+
+    /* ─── Month calendar ────────────────────────────── */
+    .cal-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin: 18px 0 10px;
+    }
+    .cal-title { font-family: var(--font-head); font-weight: 700; font-size: 15px; }
+    .cal-nav {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid var(--border); background: var(--card);
+      font-size: 18px; color: var(--mid);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cal-nav:disabled { opacity: 0.3; }
+    .cal-dow, .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+    .cal-dow { font-size: 10px; color: var(--light); text-align: center; margin-bottom: 5px; }
+    .cal-cell {
+      aspect-ratio: 1 / 1.08;
+      border-radius: 10px;
+      background: var(--muted);
+      border: 1.5px solid transparent;
+      position: relative;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+      font-family: var(--font-head); font-weight: 700; font-size: 13px; color: var(--dark);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .cal-cell.empty { background: none; }
+    .cal-cell.l1 { background: #FBE7D3; }
+    .cal-cell.l2 { background: #F8CDA6; }
+    .cal-cell.l3 { background: #F2A870; }
+    .cal-cell.l4 { background: #E9783A; color: #fff; }
+    .cal-cell.today { border-color: var(--dark); }
+    .cal-cell.future { opacity: 0.35; pointer-events: none; }
+    .cal-cell.fixable { border: 1.5px dashed var(--orange); }
+    .cal-cell.restored { border-style: dashed; border-color: var(--brown); }
+    .cal-cell.restored::after { content: '★'; position: absolute; top: 1px; right: 3px; font-size: 8px; color: var(--brown); }
+    .cal-dots { display: flex; gap: 2px; }
+    .cal-dots i { width: 4px; height: 4px; border-radius: 50%; background: rgba(42,30,20,0.15); }
+    .cal-cell.l4 .cal-dots i { background: rgba(255,255,255,0.35); }
+    .cal-dots i.on { background: var(--dark); }
+    .cal-cell.l4 .cal-dots i.on { background: #fff; }
+
+    /* ─── Ticket wallet ─────────────────────────────── */
+    .ticket-chip {
+      margin-top: 12px;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 12px; border-radius: 999px;
+      background: var(--cream); border: 1.5px solid rgba(236,103,27,0.35);
+      color: var(--terracotta);
+      font-family: var(--font-head); font-weight: 700; font-size: 12px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .ticket-chip:active { transform: scale(0.97); }
+    .ticket-chip svg { width: 14px; height: 14px; }
+    .wallet-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px; }
+    .wallet-sub { font-size: 11px; color: var(--light); margin-bottom: 8px; }
+    .wrow { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid var(--muted); }
+    .wrow .leg-glyph { width: 22px; height: 22px; flex-shrink: 0; }
+    .wname { flex: 1; min-width: 0; font-family: var(--font-head); font-weight: 700; font-size: 13px; }
+    .wname small { display: block; font-family: var(--font-body); font-weight: 400; font-size: 10.5px; color: var(--light); margin-top: 1px; }
+    .wown { font-family: var(--font-head); font-weight: 900; font-size: 15px; color: var(--mid); min-width: 28px; text-align: right; }
+    .btn-sm {
+      padding: 8px 12px; border-radius: 999px; border: none;
+      background: var(--orange); color: #fff;
+      font-family: var(--font-head); font-weight: 700; font-size: 12px;
+      white-space: nowrap;
+    }
+    .btn-sm:disabled { background: var(--muted); color: var(--light); }
+    .btn-sm.ghost { background: transparent; color: var(--orange); border: 1.5px solid var(--orange); }
+
+    /* Toast */
+    .toast {
+      position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom) + 76px);
+      transform: translate(-50%, 20px); opacity: 0;
+      background: var(--dark); color: #fff; font-size: 13px;
+      padding: 10px 16px; border-radius: 999px; z-index: 300;
+      transition: all 0.25s; pointer-events: none; max-width: 90%; text-align: center;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    /* Day sheet extras */
+    .sheet-note { font-size: 11.5px; color: var(--light); margin-top: 12px; line-height: 1.4; }
+    .modal-actions { display: flex; align-items: center; gap: 8px; }
+    .cyc-pick { display: flex; gap: 4px; }
+    .cyc-pick button {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 1.5px solid var(--border); background: none; font-weight: 700; color: var(--mid);
+    }
+    .cyc-pick button.sel { background: var(--orange); border-color: var(--orange); color: #fff; }
+    .rest-tag { font-size: 10px; color: var(--brown); font-weight: 600; margin-left: 4px; }
 
     /* Modal */
     .overlay {
@@ -596,18 +649,20 @@
       position: fixed; inset: 0;
       background: rgba(0,0,0,0.42);
       z-index: 200;
-      align-items: center;
+      align-items: flex-end;
       justify-content: center;
-      padding: 20px;
+      padding: 0;
       backdrop-filter: blur(2px);
     }
     .overlay.open { display: flex; }
     .modal {
       background: var(--card);
-      border-radius: 18px;
-      padding: 26px;
-      width: 340px;
-      max-width: 100%;
+      border-radius: 22px 22px 0 0;
+      padding: 26px 22px calc(env(safe-area-inset-bottom) + 26px);
+      width: 100%;
+      max-width: 480px;
+      max-height: 85%;
+      overflow-y: auto;
       box-shadow: 0 12px 40px rgba(90,60,30,0.18);
       position: relative;
     }
@@ -705,6 +760,7 @@
           <span class="tdot td-devi"      id="td-devi"></span>
           <span class="tdot-label" id="td-label">0 of 4</span>
         </div>
+        <button class="ticket-chip" id="ticket-chip" onclick="openWallet()" aria-label="Open tickets"></button>
       </div>
       <div class="hero-right" id="day-row">
         <div class="day-ring">
@@ -713,8 +769,8 @@
             <circle class="ring-fg" cx="36" cy="36" r="31" id="ring-fg"/>
           </svg>
           <div class="ring-center">
-            <div class="ring-num" id="day-num">—</div>
-            <div class="ring-lbl">day</div>
+            <div class="ring-num" id="day-num">0</div>
+            <div class="ring-lbl" id="ring-lbl">streak</div>
           </div>
         </div>
       </div>
@@ -779,42 +835,54 @@
 </main>
 </div><!-- /view-today -->
 
-<!-- VIEW: Journey (history grid) -->
+<!-- VIEW: Yatra (lifetime journey) -->
 <div class="view hidden" id="view-history">
 <section class="history">
   <div class="history-inner">
     <div class="history-head">
-      <div class="history-title">111-Day Journey</div>
+      <div class="history-title">Your Yatra</div>
       <div class="history-range" id="history-range">—</div>
+    </div>
+
+    <div class="heat-wrap">
+      <div class="heat-scroll" id="heat-scroll">
+        <div class="heat-inner" id="heat-inner">
+          <div class="heat-months" id="heat-months"></div>
+          <div class="heat-grid" id="heat-grid"></div>
+        </div>
+      </div>
+      <div class="heat-legend">
+        Less <span class="hc"></span><span class="hc l1"></span><span class="hc l2"></span><span class="hc l3"></span><span class="hc l4"></span> More
+      </div>
     </div>
 
     <div class="stats">
       <div class="stat">
-        <div class="stat-num" id="st-done" style="color:var(--orange)">0</div>
-        <div class="stat-lbl">Days Done</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num" id="st-streak" style="color:var(--blue)">0</div>
+        <div class="stat-num" id="st-streak" style="color:var(--orange)">0</div>
         <div class="stat-lbl">Streak</div>
       </div>
       <div class="stat">
-        <div class="stat-num" id="st-shambhavi" style="color:var(--crimson)">0%</div>
-        <div class="stat-lbl">Shambhavi</div>
+        <div class="stat-num" id="st-best" style="color:var(--blue)">0</div>
+        <div class="stat-lbl">Best</div>
       </div>
       <div class="stat">
-        <div class="stat-num" id="st-surya" style="color:var(--brown)">0</div>
-        <div class="stat-lbl">Surya Cyc.</div>
+        <div class="stat-num" id="st-done" style="color:var(--crimson)">0</div>
+        <div class="stat-lbl">Days</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="st-points" style="color:var(--brown)">0</div>
+        <div class="stat-lbl">Points</div>
       </div>
     </div>
 
-    <div class="legend">
-      <div class="leg-item"><svg class="leg-glyph s-surya"><use href="#g-surya"/></svg>Surya</div>
-      <div class="leg-item"><svg class="leg-glyph s-shambhavi"><use href="#g-shambhavi"/></svg>Shambhavi</div>
-      <div class="leg-item"><svg class="leg-glyph s-bhuta"><use href="#g-bhuta"/></svg>Bhuta</div>
-      <div class="leg-item"><svg class="leg-glyph s-devi"><use href="#g-devi"/></svg>Devi</div>
+    <div class="cal-head">
+      <button class="cal-nav" id="cal-prev" onclick="shiftMonth(-1)" aria-label="Previous month">‹</button>
+      <div class="cal-title" id="cal-title">—</div>
+      <button class="cal-nav" id="cal-next" onclick="shiftMonth(1)" aria-label="Next month">›</button>
     </div>
+    <div class="cal-dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+    <div class="cal-grid" id="cal-grid"></div>
 
-    <div class="days-grid" id="days-grid"></div>
   </div>
 </section>
 </div><!-- /view-history -->
@@ -850,6 +918,8 @@
 </nav>
 
 <!-- ── Day detail modal (outside app-body so it layers above everything) ── -->
+<div class="toast" id="toast"></div>
+
 <div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
   <div class="modal" role="dialog" aria-modal="true">
     <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
@@ -865,10 +935,25 @@
    CONFIG
    ============================================================ */
 const CFG = {
-  START_DATE: '2026-06-10',
-  TOTAL_DAYS: 111,
+  START_DATE: '2026-06-10',          // journey began (heatmap never starts later than this)
   SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzZDXZzoJxqRMBK3hfYphg07ThIyNKclR5jyRpP7wLmxK7A6PzCuKMJDsdRFVuAoHwl/exec',
+  TICKET_COST: 10,
+  TICKETS_PER_MONTH: 3,
+  REPAIR_WINDOW_DAYS: 30,
+  MILESTONES: [7, 21, 40, 48, 90, 111, 180, 365],
 };
+
+const PRACTICES = ['surya', 'shambhavi', 'bhuta', 'devi'];
+const PNAME = {
+  surya: 'Surya Kriya', shambhavi: 'Shambhavi Mahamudra',
+  bhuta: 'Bhuta Shuddhi', devi: 'Devi Sadhana',
+};
+const PCOLOR = {
+  surya: 'var(--orange)', shambhavi: 'var(--crimson)',
+  bhuta: 'var(--blue)', devi: 'var(--brown)',
+};
+const DATA_KEY = 'sadhana-tracker-data';
+const TICKET_KEY = 'sadhana-tickets';
 
 /* ============================================================
    STATE
@@ -878,8 +963,12 @@ const S = {
   shambhavi: false,
   bhuta: false,
   devi: false,
-  data: {},        // { 'YYYY-MM-DD': { cycles, shambhavi, bhuta, devi } }
+  data: {},        // { 'YYYY-MM-DD': { cycles, shambhavi, bhuta, devi, restored[] } }
+  tickets: [],     // { id, practice, boughtOn, usedFor, usedAt }
   todayKey: '',
+  viewMonth: null, // Date (1st of month) shown in the calendar
+  sheetKey: null,  // day currently open in the sheet
+  pickCycles: 1,
 };
 
 /* ============================================================
@@ -896,8 +985,64 @@ function toKey(date) {
   return `${y}-${m}-${d}`;
 }
 function todayKey() { return toKey(new Date()); }
-function dayNum(key) {
-  return Math.round((parseLocal(key) - parseLocal(CFG.START_DATE)) / 864e5) + 1;
+function addDays(key, n) {
+  const d = parseLocal(key);
+  d.setDate(d.getDate() + n);
+  return toKey(d);
+}
+function daysBetween(a, b) {
+  return Math.round((parseLocal(b) - parseLocal(a)) / 864e5);
+}
+function journeyStart() {
+  let min = CFG.START_DATE;
+  Object.keys(S.data).forEach(k => { if (k < min && hasContent(S.data[k])) min = k; });
+  return min;
+}
+function dayNum(key) { return daysBetween(journeyStart(), key) + 1; }
+function mondayIndex(date) { return (date.getDay() + 6) % 7; }
+
+/* ============================================================
+   PRACTICE / SCORING HELPERS
+   ============================================================ */
+function isDone(d, p) {
+  if (!d) return false;
+  return p === 'surya' ? Number(d.cycles) >= 1 : !!d[p];
+}
+function doneCount(d) { return PRACTICES.filter(p => isDone(d, p)).length; }
+function isRestored(d, p) { return !!d && Array.isArray(d.restored) && d.restored.includes(p); }
+function hasContent(o) {
+  return !!o && (o.cycles > 0 || o.shambhavi || o.bhuta || o.devi);
+}
+
+/* Streak counts back from today; a not-yet-logged today doesn't break it. */
+function currentStreak() {
+  let key = S.todayKey;
+  if (!doneCount(S.data[key])) key = addDays(key, -1);
+  let n = 0;
+  while (doneCount(S.data[key]) > 0) { n++; key = addDays(key, -1); }
+  return n;
+}
+
+function computeStats() {
+  const start = journeyStart();
+  const total = daysBetween(start, S.todayKey);
+  let best = 0, run = 0, days = 0, earned = 0;
+  for (let i = 0; i <= total; i++) {
+    const d = S.data[addDays(start, i)];
+    const c = doneCount(d);
+    if (c > 0) { run++; days++; best = Math.max(best, run); } else run = 0;
+    if (d) {
+      const genuine = PRACTICES.filter(p => isDone(d, p) && !isRestored(d, p)).length;
+      earned += genuine + (genuine === 4 ? 2 : 0);
+    }
+  }
+  const points = earned - CFG.TICKET_COST * S.tickets.length;
+  return { streak: currentStreak(), best, days, points, earned };
+}
+
+function nextMilestone(streak) {
+  const m = CFG.MILESTONES.find(x => x > streak);
+  return m || (Math.floor(streak / 365) + 1) * 365;
 }
 
 /* ============================================================
@@ -925,46 +1070,29 @@ function setDailyQuote() {
 function init() {
   S.todayKey = todayKey();
   const now  = new Date();
+  S.viewMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
   setDailyQuote();
 
-  // Greeting (time-aware)
   const h = now.getHours();
   const greet = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
   document.getElementById('greeting').textContent = greet;
-
-  // Date — clean, warm, present (no day numbers, no program framing)
   document.getElementById('today-date').textContent =
     now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
-  // Day progress ring
-  const num  = dayNum(S.todayKey);
-  const dayNumEl = document.getElementById('day-num');
-  const dayRow   = document.getElementById('day-row');
-  if (num >= 1 && num <= CFG.TOTAL_DAYS) {
-    dayNumEl.textContent = num;
-    // Fill the ring proportional to the journey (after paint, so it animates)
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      document.getElementById('ring-fg').style.strokeDashoffset =
-        (194.8 * (1 - num / CFG.TOTAL_DAYS)).toFixed(1);
-    }));
-  } else {
-    dayRow.style.display = 'none';
-  }
-
-  // Soft countdown, top-right
-  const left = CFG.TOTAL_DAYS - num + 1;
-  const el   = document.getElementById('header-left');
-  if (num < 1) {
-    const until = 1 - num;
-    el.innerHTML = `begins in <b>${until}</b> day${until === 1 ? '' : 's'}`;
-  } else if (num > CFG.TOTAL_DAYS) {
-    el.innerHTML = 'Devi sadhana complete';
-  } else {
-    el.innerHTML = `<b>${left}</b> day${left === 1 ? '' : 's'} left for Devi`;
-  }
-
   loadData();
+}
+
+/* Hero ring (streak → next milestone) + header (points, day count) */
+function refreshHero() {
+  const st = computeStats();
+  const next = nextMilestone(st.streak);
+  document.getElementById('day-num').textContent = st.streak;
+  document.getElementById('ring-fg').style.strokeDashoffset =
+    (194.8 * (1 - Math.min(1, st.streak / next))).toFixed(1);
+  document.getElementById('header-left').innerHTML =
+    `<b>◆ ${st.points}</b> · Day ${dayNum(S.todayKey)}`;
+  renderChip();
 }
 
 /* ============================================================
@@ -997,7 +1125,6 @@ function renderCards() {
     document.getElementById('td-' + k).classList.toggle('on',   on);
   });
 
-  // Completion dots label
   const count = Object.values(state).filter(Boolean).length;
   document.getElementById('td-label').textContent = count + ' of 4';
 
@@ -1008,18 +1135,35 @@ function renderCards() {
 /* Haptic feedback (Android; ignored elsewhere) */
 function buzz(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch(e) {} }
 
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
 /* ============================================================
    LOAD / SYNC
    ============================================================ */
-function loadData() {
-  // Render instantly from local cache
+function persist() {
   try {
-    const stored = localStorage.getItem('sadhana-tracker-data');
+    localStorage.setItem(DATA_KEY, JSON.stringify(S.data));
+    localStorage.setItem(TICKET_KEY, JSON.stringify(S.tickets));
+  } catch(e) { console.warn('Cache write failed:', e.message); }
+}
+
+function loadData() {
+  try {
+    const stored = localStorage.getItem(DATA_KEY);
     if (stored) S.data = JSON.parse(stored);
+    const t = localStorage.getItem(TICKET_KEY);
+    if (t) S.tickets = JSON.parse(t);
   } catch(e) { console.warn('Cache read failed:', e.message); }
   fillToday();
-  renderGrid();
-  updateStats();
+  refreshHero();
+  renderYatra();
   syncFromCloud();
 }
 
@@ -1034,9 +1178,6 @@ function fillToday() {
   renderCards();
 }
 
-function hasContent(o) {
-  return !!o && (o.cycles > 0 || o.shambhavi || o.bhuta || o.devi);
-}
 function normalizeDate(v) {
   if (!v) return '';
   if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
@@ -1044,46 +1185,63 @@ function normalizeDate(v) {
   return isNaN(d) ? '' : toKey(d);
 }
 
+function cloudOn() { return CFG.SCRIPT_URL && CFG.SCRIPT_URL !== 'YOUR_APPS_SCRIPT_WEB_APP_URL'; }
+const asBool = v => v === true || v === 'TRUE';
+
 async function syncFromCloud() {
-  if (!CFG.SCRIPT_URL || CFG.SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL') return;
+  if (!cloudOn()) return;
   try {
     const r = await fetch(CFG.SCRIPT_URL + '?action=get');
     const j = await r.json();
-    const rows = j.data || [];
-    let merged = 0;
+    let changed = false;
 
-    rows.forEach(row => {
+    (j.data || []).forEach(row => {
       let key, entry;
       if (Array.isArray(row)) {
         key = normalizeDate(row[0]);
         entry = {
-          cycles:    Number(row[1]) || 0,
-          shambhavi: row[2] === true || row[2] === 'TRUE',
-          bhuta:     row[3] === true || row[3] === 'TRUE',
-          devi:      row[4] === true || row[4] === 'TRUE',
+          cycles: Number(row[1]) || 0,
+          shambhavi: asBool(row[2]), bhuta: asBool(row[3]), devi: asBool(row[4]),
+          restored: String(row[5] || '').split(',').filter(Boolean),
         };
       } else if (row && typeof row === 'object') {
         key = normalizeDate(row.date);
         entry = {
-          cycles:    Number(row.surya_cycles != null ? row.surya_cycles : row.cycles) || 0,
-          shambhavi: row.shambhavi === true || row.shambhavi === 'TRUE',
-          bhuta:     row.bhuta === true || row.bhuta === 'TRUE',
-          devi:      row.devi === true || row.devi === 'TRUE',
+          cycles: Number(row.surya_cycles != null ? row.surya_cycles : row.cycles) || 0,
+          shambhavi: asBool(row.shambhavi), bhuta: asBool(row.bhuta), devi: asBool(row.devi),
+          restored: Array.isArray(row.restored) ? row.restored : String(row.restored || '').split(',').filter(Boolean),
         };
       }
       if (!key) return;
-      // Non-destructive: never overwrite a logged local day with an empty cloud row
-      if (hasContent(entry) || !hasContent(S.data[key])) {
-        S.data[key] = entry;
-        merged++;
+      const local = S.data[key];
+      if (!local || key === S.todayKey) {
+        // today is edited here, so the cloud only fills a gap
+        if (!local || (!hasContent(local) && hasContent(entry))) { S.data[key] = entry; changed = true; }
+        return;
       }
+      // Past days only ever gain practices (a repair on either side is kept)
+      S.data[key] = {
+        cycles:    Math.max(local.cycles || 0, entry.cycles),
+        shambhavi: !!local.shambhavi || entry.shambhavi,
+        bhuta:     !!local.bhuta     || entry.bhuta,
+        devi:      !!local.devi      || entry.devi,
+        restored:  [...new Set([...(local.restored || []), ...entry.restored])],
+      };
+      changed = true;
     });
 
-    if (merged) {
-      localStorage.setItem('sadhana-tracker-data', JSON.stringify(S.data));
+    (j.tickets || []).forEach(ct => {
+      if (!ct || !ct.id) return;
+      const lt = S.tickets.find(t => t.id === ct.id);
+      if (!lt) { S.tickets.push(ct); changed = true; }
+      else if (!lt.usedFor && ct.usedFor) { lt.usedFor = ct.usedFor; lt.usedAt = ct.usedAt; changed = true; }
+    });
+
+    if (changed) {
+      persist();
       fillToday();
-      renderGrid();
-      updateStats();
+      refreshHero();
+      renderYatra();
     }
   } catch(e) {
     console.log('Cloud offline — using cached data.', e.message);
@@ -1093,6 +1251,25 @@ async function syncFromCloud() {
 /* ============================================================
    SAVE
    ============================================================ */
+async function postJSON(payload) {
+  if (!cloudOn()) return true;
+  try {
+    const r = await fetch(CFG.SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload),
+    });
+    const j = JSON.parse(await r.text());
+    if (!j.success) throw new Error(j.error || 'Server rejected the request');
+    return true;
+  } catch(e) {
+    console.warn('Cloud save failed. Check Apps Script deployment.', e.message);
+    return false;
+  }
+}
+const postDay = entry => postJSON(entry);
+const postTicket = t => postJSON({ action: 'ticket', ...t });
+
 async function saveToday() {
   const btn = document.getElementById('cta');
   const msg = document.getElementById('save-msg');
@@ -1103,46 +1280,29 @@ async function saveToday() {
     shambhavi: S.shambhavi,
     bhuta:     S.bhuta,
     devi:      S.devi,
+    restored:  (S.data[S.todayKey] && S.data[S.todayKey].restored) || [],
   };
 
   // Local cache first — always works, the day is never lost
   S.data[S.todayKey] = entry;
-  try { localStorage.setItem('sadhana-tracker-data', JSON.stringify(S.data)); }
-  catch(e) { console.warn('Cache write failed:', e.message); }
-  renderGrid();
-  updateStats();
+  persist();
+  refreshHero();
+  renderYatra();
 
-  if (CFG.SCRIPT_URL && CFG.SCRIPT_URL !== 'YOUR_APPS_SCRIPT_WEB_APP_URL') {
-    btn.disabled = true;
-    btn.textContent = 'Saving…';
-    try {
-      const r = await fetch(CFG.SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(entry),
-      });
-      const raw = await r.text();
-      console.log('Cloud response:', raw.substring(0, 300));
-      const j = JSON.parse(raw);
-      if (!j.success) throw new Error(j.error || 'Server returned: ' + raw.substring(0, 80));
-      msg.className = 'save-msg ok';
-      msg.textContent = 'Saved ✔';
-      celebrate(btn);
-    } catch(e) {
-      msg.className = 'save-msg err';
-      msg.textContent = '✓ Saved on device · cloud sync failed';
-      console.warn('Cloud save failed. Check Apps Script deployment.', e.message);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = "Shambhoo";
-      setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 3500);
-    }
-  } else {
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  const ok = await postDay(entry);
+  if (ok) {
     msg.className = 'save-msg ok';
     msg.textContent = 'Saved ✔';
     celebrate(btn);
-    setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 3500);
+  } else {
+    msg.className = 'save-msg err';
+    msg.textContent = '✓ Saved on device · cloud sync failed';
   }
+  btn.disabled = false;
+  btn.textContent = 'Shambhoo';
+  setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 3500);
 }
 
 function celebrate(btn) {
@@ -1153,121 +1313,256 @@ function celebrate(btn) {
 }
 
 /* ============================================================
-   HISTORY GRID
+   YATRA — heatmap, month calendar, wallet
    ============================================================ */
 function shortDate(date) {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-function renderGrid() {
-  const grid     = document.getElementById('days-grid');
-  const start    = parseLocal(CFG.START_DATE);
-  const todayStr = todayKey();
-  grid.innerHTML = '';
-
-  // Date range label
-  const endDate = new Date(start);
-  endDate.setDate(endDate.getDate() + CFG.TOTAL_DAYS - 1);
-  document.getElementById('history-range').textContent =
-    shortDate(start) + ' – ' + shortDate(endDate);
-
-  for (let i = 0; i < CFG.TOTAL_DAYS; i++) {
-    const date    = new Date(start);
-    date.setDate(date.getDate() + i);
-    const key     = toKey(date);
-    const num     = i + 1;
-    const d       = S.data[key];
-    const isToday = key === todayStr;
-    const future  = key > todayStr;
-    const logged  = d && (d.cycles > 0 || d.shambhavi || d.bhuta || d.devi);
-    const complete = d && d.cycles >= 1 && d.shambhavi && d.bhuta && d.devi;
-    const milestone = [21, 40, 48, 90, 111].includes(num);
-
-    const card = document.createElement('div');
-    card.className = 'day-card' +
-      (isToday    ? ' today'     : '') +
-      (future     ? ' future'    : '') +
-      (milestone  ? ' milestone' : '') +
-      (complete   ? ' complete'  : logged ? ' logged' : '');
-
-    if (!future) card.onclick = () => openModal(num, key, d);
-
-    const g = (sym, cls, on) =>
-      `<svg class="dcg s-${cls}${on ? ' on' : ''}"><use href="#g-${sym}"/></svg>`;
-
-    card.innerHTML =
-      `<div class="dc-num" style="color:${isToday ? 'var(--orange)' : 'var(--dark)'}">${num}</div>` +
-      `<div class="dc-date">${shortDate(date)}</div>` +
-      `<div class="dc-glyphs">` +
-        g('surya',     'surya',     d && d.cycles >= 1) +
-        g('shambhavi', 'shambhavi', !!d?.shambhavi) +
-        g('bhuta',     'bhuta',     !!d?.bhuta) +
-        g('devi',      'devi',      !!d?.devi) +
-      `</div>`;
-
-    grid.appendChild(card);
-  }
+function renderYatra() {
+  renderHeatmap();
+  renderStats();
+  renderMonth();
 }
 
-/* ============================================================
-   STATS
-   ============================================================ */
-function updateStats() {
-  const start    = parseLocal(CFG.START_DATE);
-  const todayStr = todayKey();
-  let done = 0, streak = 0, counting = true, shambhCt = 0, suryaTot = 0;
+function renderHeatmap() {
+  const grid   = document.getElementById('heat-grid');
+  const months = document.getElementById('heat-months');
+  const start  = journeyStart();
+  const first  = parseLocal(start);
+  first.setDate(first.getDate() - mondayIndex(first));        // Monday of the first week
+  const firstKey = toKey(first);
+  const weeks  = Math.floor(daysBetween(firstKey, S.todayKey) / 7) + 1;
+  const COL = 16;                                             // 13px cell + 3px gap
 
-  for (let i = CFG.TOTAL_DAYS - 1; i >= 0; i--) {
-    const date = new Date(start);
-    date.setDate(date.getDate() + i);
-    const key = toKey(date);
-    if (key > todayStr) continue;
-    const d      = S.data[key];
-    const logged = d && (d.cycles > 0 || d.shambhavi || d.bhuta || d.devi);
-    if (logged) {
-      done++;
-      if (counting) streak++;
-      if (d.shambhavi) shambhCt++;
-      suryaTot += (d.cycles || 0);
-    } else {
-      counting = false;
+  let cells = '', labels = '', lastMonth = -1;
+  for (let w = 0; w < weeks; w++) {
+    for (let r = 0; r < 7; r++) {
+      const key = addDays(firstKey, w * 7 + r);
+      if (key < start) { cells += '<div class="hc pad"></div>'; continue; }
+      if (key > S.todayKey) { cells += '<div class="hc future"></div>'; continue; }
+      const d = S.data[key];
+      cells += `<div class="hc l${doneCount(d)}${key === S.todayKey ? ' today' : ''}" data-key="${key}"></div>`;
+    }
+    const sunday = parseLocal(addDays(firstKey, w * 7 + 6));
+    if (sunday.getMonth() !== lastMonth) {
+      labels += `<span style="left:${w * COL}px">${sunday.toLocaleDateString('en-US', { month: 'short' })}</span>`;
+      lastMonth = sunday.getMonth();
     }
   }
+  grid.innerHTML = cells;
+  months.innerHTML = labels;
+  months.style.width = weeks * COL + 'px';
 
-  document.getElementById('st-done').textContent      = done;
-  document.getElementById('st-streak').textContent    = streak;
-  document.getElementById('st-shambhavi').textContent =
-    done > 0 ? Math.round((shambhCt / done) * 100) + '%' : '0%';
-  document.getElementById('st-surya').textContent     = suryaTot;
+  document.getElementById('history-range').textContent =
+    'since ' + parseLocal(start).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+document.getElementById('heat-grid').addEventListener('click', e => {
+  const k = e.target.dataset && e.target.dataset.key;
+  if (k) openDay(k);
+});
+
+function renderStats() {
+  const st = computeStats();
+  document.getElementById('st-streak').textContent = st.streak;
+  document.getElementById('st-best').textContent   = st.best;
+  document.getElementById('st-done').textContent   = st.days;
+  document.getElementById('st-points').textContent = st.points;
+}
+
+function inRepairWindow(key) {
+  return key < S.todayKey && daysBetween(key, S.todayKey) <= CFG.REPAIR_WINDOW_DAYS;
+}
+
+function shiftMonth(n) {
+  S.viewMonth = new Date(S.viewMonth.getFullYear(), S.viewMonth.getMonth() + n, 1);
+  renderMonth();
+}
+
+function renderMonth() {
+  const vm = S.viewMonth;
+  document.getElementById('cal-title').textContent =
+    vm.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+  const startM = parseLocal(journeyStart());
+  const now = parseLocal(S.todayKey);
+  const vmIdx = vm.getFullYear() * 12 + vm.getMonth();
+  document.getElementById('cal-prev').disabled = vmIdx <= startM.getFullYear() * 12 + startM.getMonth();
+  document.getElementById('cal-next').disabled = vmIdx >= now.getFullYear() * 12 + now.getMonth();
+
+  const daysIn = new Date(vm.getFullYear(), vm.getMonth() + 1, 0).getDate();
+  let html = '<div class="cal-cell empty"></div>'.repeat(mondayIndex(vm));
+  for (let day = 1; day <= daysIn; day++) {
+    const key = toKey(new Date(vm.getFullYear(), vm.getMonth(), day));
+    const d = S.data[key];
+    const lvl = doneCount(d);
+    const cls = ['cal-cell', 'l' + lvl];
+    if (key === S.todayKey) cls.push('today');
+    if (key > S.todayKey) cls.push('future');
+    if (d && Array.isArray(d.restored) && d.restored.length) cls.push('restored');
+    else if (lvl === 0 && inRepairWindow(key)) cls.push('fixable');
+    const dots = PRACTICES.map(p => `<i class="${isDone(d, p) ? 'on' : ''}"></i>`).join('');
+    html += `<div class="${cls.join(' ')}" data-key="${key}">${day}<span class="cal-dots">${dots}</span></div>`;
+  }
+  document.getElementById('cal-grid').innerHTML = html;
+}
+document.getElementById('cal-grid').addEventListener('click', e => {
+  const cell = e.target.closest('[data-key]');
+  if (cell && !cell.classList.contains('future')) openDay(cell.dataset.key);
+});
+
+/* ---------- Tickets ---------- */
+function ticketsOwned(p) { return S.tickets.filter(t => t.practice === p && !t.usedFor); }
+function boughtThisMonth(p) {
+  const ym = S.todayKey.slice(0, 7);
+  return S.tickets.filter(t => t.practice === p && t.boughtOn.slice(0, 7) === ym).length;
+}
+function canBuy(p) {
+  return computeStats().points >= CFG.TICKET_COST && boughtThisMonth(p) < CFG.TICKETS_PER_MONTH;
+}
+
+function renderChip() {
+  const owned = S.tickets.filter(t => !t.usedFor).length;
+  document.getElementById('ticket-chip').innerHTML =
+    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/></svg>` +
+    `${owned} ticket${owned === 1 ? '' : 's'} · ◆ ${computeStats().points}`;
+}
+
+function openWallet() {
+  S.sheetKey = null;
+  S.walletOpen = true;
+  renderWallet();
+  document.getElementById('overlay').classList.add('open');
+}
+
+function renderWallet() {
+  const st = computeStats();
+  document.getElementById('m-title').textContent = 'Tickets';
+  document.getElementById('m-date').textContent = `◆ ${st.points} points · ${CFG.TICKET_COST}◆ per ticket`;
+  const rows = PRACTICES.map(p => {
+    const bought = boughtThisMonth(p);
+    return `<div class="wrow">
+      <svg class="leg-glyph s-${p}"><use href="#g-${p}"/></svg>
+      <div class="wname">${PNAME[p]}<small>bought ${bought}/${CFG.TICKETS_PER_MONTH} this month</small></div>
+      <div class="wown">×${ticketsOwned(p).length}</div>
+      <button class="btn-sm" onclick="buyTicket('${p}')" ${canBuy(p) ? '' : 'disabled'}>Buy · ${CFG.TICKET_COST}◆</button>
+    </div>`;
+  }).join('');
+  document.getElementById('m-body').innerHTML = rows +
+    `<div class="sheet-note">Earn ◆ from practice (1 each, +2 for a full day). To use a ticket, open a missed day in Yatra (last ${CFG.REPAIR_WINDOW_DAYS} days).</div>`;
+}
+
+function buyTicket(p) {
+  if (!canBuy(p)) {
+    toast(boughtThisMonth(p) >= CFG.TICKETS_PER_MONTH ? 'Monthly limit reached for this practice' : 'Not enough points yet');
+    return;
+  }
+  if (!confirm(`Spend ${CFG.TICKET_COST}◆ on a ${PNAME[p]} ticket?`)) return;
+  const t = {
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+    practice: p, boughtOn: S.todayKey, usedFor: null, usedAt: null,
+  };
+  S.tickets.push(t);
+  persist();
+  buzz(15);
+  toast('Ticket bought ✔');
+  postTicket(t).then(ok => { if (!ok) toast('Saved on device · cloud sync failed'); });
+  refreshAll();
+}
+
+function useTicket(key, p) {
+  if (!inRepairWindow(key) || isDone(S.data[key], p)) return;
+  const t = ticketsOwned(p)[0];
+  if (!t) return;
+  if (!confirm(`Use a ticket to mark ${PNAME[p]} done on ${shortDate(parseLocal(key))}?`)) return;
+
+  const d = S.data[key] || { date: key, cycles: 0, shambhavi: false, bhuta: false, devi: false, restored: [] };
+  d.date = key;
+  if (p === 'surya') d.cycles = Math.max(d.cycles || 0, S.pickCycles);
+  else d[p] = true;
+  d.restored = [...new Set([...(d.restored || []), p])];
+  S.data[key] = d;
+  t.usedFor = key;
+  t.usedAt = new Date().toISOString();
+  persist();
+  buzz(20);
+  toast('Day restored ✔');
+
+  Promise.all([postDay(d), postTicket(t)]).then(r => {
+    if (r.includes(false)) toast('Saved on device · cloud sync failed');
+  });
+  refreshAll();
+}
+
+function refreshAll() {
+  refreshHero();
+  renderYatra();
+  if (S.sheetKey) renderSheet();
+  else if (S.walletOpen) renderWallet();
 }
 
 /* ============================================================
-   MODAL
+   DAY SHEET
    ============================================================ */
-function openModal(num, key, d) {
-  document.getElementById('m-title').textContent = 'Day ' + num;
-  document.getElementById('m-date').textContent  =
-    parseLocal(key).toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
-
-  const rows = [
-    { label:'Surya Kriya',         val: d ? `${d.cycles} / 3 cycles`          : '—', color:'var(--orange)',  on: d?.cycles > 0 },
-    { label:'Shambhavi Mahamudra', val: d?.shambhavi ? 'Completed' : 'Not logged', color:'var(--crimson)', on: d?.shambhavi },
-    { label:'Bhuta Shuddhi',       val: d?.bhuta     ? 'Completed' : 'Not logged', color:'var(--blue)',    on: d?.bhuta },
-    { label:'Devi Sadhana',        val: d?.devi      ? 'Completed' : 'Not logged', color:'var(--brown)',   on: d?.devi },
-  ];
-
-  document.getElementById('m-body').innerHTML = rows.map(r => `
-    <div class="modal-row">
-      <div>
-        <div class="modal-label">${r.label}</div>
-        <div class="modal-val" style="color:${r.on ? r.color : 'var(--light)'}">${r.val}</div>
-      </div>
-      <div class="modal-dot" style="background:${r.on ? r.color : 'var(--muted)'}"></div>
-    </div>`).join('');
-
+function openDay(key) {
+  S.walletOpen = false;
+  S.sheetKey = key;
+  S.pickCycles = 1;
+  renderSheet();
   document.getElementById('overlay').classList.add('open');
 }
-function closeModal() { document.getElementById('overlay').classList.remove('open'); }
+
+function renderSheet() {
+  const key = S.sheetKey;
+  const d = S.data[key];
+  const editable = inRepairWindow(key);
+  const date = parseLocal(key);
+
+  document.getElementById('m-title').textContent = 'Day ' + dayNum(key);
+  document.getElementById('m-date').textContent =
+    date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+
+  const rows = PRACTICES.map(p => {
+    const on = isDone(d, p);
+    const val = p === 'surya'
+      ? (on ? `${d.cycles} / 3 cycles` : 'Not logged')
+      : (on ? 'Completed' : 'Not logged');
+    const tag = on && isRestored(d, p) ? '<span class="rest-tag">restored</span>' : '';
+    let action = '';
+    if (!on && editable) {
+      const owned = ticketsOwned(p).length > 0;
+      let picker = '';
+      if (p === 'surya') {
+        picker = '<span class="cyc-pick">' + [1, 2, 3].map(n =>
+          `<button class="${S.pickCycles === n ? 'sel' : ''}" onclick="S.pickCycles=${n};renderSheet()">${n}</button>`).join('') + '</span>';
+      }
+      action = owned
+        ? `${picker}<button class="btn-sm" onclick="useTicket('${key}','${p}')">Use ticket</button>`
+        : `<button class="btn-sm ghost" onclick="buyTicket('${p}')" ${canBuy(p) ? '' : 'disabled'}>Buy · ${CFG.TICKET_COST}◆</button>`;
+    }
+    return `
+    <div class="modal-row">
+      <div>
+        <div class="modal-label">${PNAME[p]}${tag}</div>
+        <div class="modal-val" style="color:${on ? PCOLOR[p] : 'var(--light)'}">${val}</div>
+      </div>
+      <div class="modal-actions">${action}<div class="modal-dot" style="background:${on ? PCOLOR[p] : 'var(--muted)'}"></div></div>
+    </div>`;
+  }).join('');
+
+  let note = '';
+  if (key === S.todayKey) note = 'Log today from the Today tab.';
+  else if (key < S.todayKey && !editable) note = `Older than ${CFG.REPAIR_WINDOW_DAYS} days — this record is sealed.`;
+  else if (editable && doneCount(d) < 4) note = 'Missed something? Use a ticket to restore it. Restored practices keep your streak but earn no ◆.';
+
+  document.getElementById('m-body').innerHTML = rows + (note ? `<div class="sheet-note">${note}</div>` : '');
+}
+
+function closeModal() {
+  S.sheetKey = null;
+  S.walletOpen = false;
+  document.getElementById('overlay').classList.remove('open');
+}
 function handleOverlayClick(e) { if (e.target === document.getElementById('overlay')) closeModal(); }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
@@ -1280,7 +1575,11 @@ function switchTab(name) {
   document.getElementById('view-history').classList.toggle('hidden', !isHistory);
   document.getElementById('tab-today').classList.toggle('active', !isHistory);
   document.getElementById('tab-history').classList.toggle('active', isHistory);
-  if (isHistory) { renderGrid(); updateStats(); }
+  if (isHistory) {
+    renderYatra();
+    const hs = document.getElementById('heat-scroll');
+    hs.scrollLeft = hs.scrollWidth;       // open on today (right edge)
+  }
 }
 
 /* ============================================================
