@@ -174,6 +174,7 @@
     }
     .card { width: 100%; max-width: 460px; display: flex; flex-direction: column; }
     #view-today { display: flex; flex-direction: column; overflow: hidden; }
+    #view-today.hidden { display: none; }
 
     /* ─── Compact hero: left col + right col ─────────── */
     .hero-flex {
@@ -765,6 +766,36 @@
     .tab { color: #6f6f73; padding: 0 18px; font-size: 14px; }
     .tab.active { color: #fff; padding: 0 22px 0 18px; }
     .tab-bar { gap: 6px; padding: 7px 8px; }
+
+    /* ─── Yatra (Road to 1008) ──────────────────────── */
+    .history-head { align-items: flex-start; margin-bottom: 14px; }
+    .y-title { font-family: var(--font-serif); font-weight: 600; font-size: 26px; letter-spacing: -0.3px; line-height: 1.1; }
+    .y-sub { font-size: 12.5px; color: var(--mid); margin-top: 4px; }
+    .goal-pill {
+      display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0;
+      padding: 9px 14px; border-radius: 999px;
+      background: var(--cream-2); color: var(--terracotta);
+      font-family: var(--font-head); font-weight: 700; font-size: 15px;
+    }
+    .goal-pill svg { width: 18px; height: 18px; }
+    .goal-row { display: flex; align-items: center; gap: 12px; }
+    .goal-row .goal-bar { flex: 1; height: 9px; }
+    .goal-pct { font-size: 12px; color: var(--mid); min-width: 30px; text-align: right; }
+    .goal-sub { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--mid); margin: 10px 0 16px; }
+    .goal-sub svg { width: 17px; height: 17px; color: var(--light); }
+
+    .heat-wrap { border-radius: 18px; padding: 14px 14px 12px; box-shadow: var(--shadow); }
+    .card-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+    .card-title { font-family: var(--font-head); font-weight: 700; font-size: 16px; }
+    .card-note { font-size: 11px; color: var(--light); }
+
+    .cal-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 14px 12px 14px; box-shadow: var(--shadow); }
+    .cal-head { margin: 0 0 12px; }
+    .cal-title { font-family: var(--font-serif); font-weight: 600; font-size: 19px; }
+    .cal-nav { width: 38px; height: 38px; background: transparent; }
+    .cal-dow { font-size: 11px; font-weight: 600; color: var(--mid); margin-bottom: 8px; }
+    .cal-cell { border-radius: 12px; }
+    .cal-cell.future { background: transparent; opacity: 0.5; }
   </style>
 </head>
 <body>
@@ -924,13 +955,26 @@
 <section class="history">
   <div class="history-inner">
     <div class="history-head">
-      <div class="history-title">Road to 1008</div>
-      <div class="history-range" id="history-range">—</div>
+      <div>
+        <div class="y-title">Road to 1008</div>
+        <div class="y-sub">A journey of daily practice</div>
+      </div>
+      <div class="goal-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>
+        <span id="history-range">—</span>
+      </div>
     </div>
-    <div class="goal-bar"><div class="goal-fill" id="goal-fill"></div></div>
-    <div class="goal-sub" id="goal-sub"></div>
+    <div class="goal-row">
+      <div class="goal-bar"><div class="goal-fill" id="goal-fill"></div></div>
+      <span class="goal-pct" id="goal-pct">0%</span>
+    </div>
+    <div class="goal-sub">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5.5" width="16" height="14" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></svg>
+      <span id="goal-sub"></span>
+    </div>
 
     <div class="heat-wrap">
+      <div class="card-head"><div class="card-title">Practice Heatmap</div><div class="card-note">Daily practice over time</div></div>
       <div class="heat-scroll" id="heat-scroll">
         <div class="heat-inner" id="heat-inner">
           <div class="heat-months" id="heat-months"></div>
@@ -942,13 +986,15 @@
       </div>
     </div>
 
+    <div class="cal-card">
     <div class="cal-head">
       <button class="cal-nav" id="cal-prev" onclick="shiftMonth(-1)" aria-label="Previous month">‹</button>
       <div class="cal-title" id="cal-title">—</div>
       <button class="cal-nav" id="cal-next" onclick="shiftMonth(1)" aria-label="Next month">›</button>
     </div>
-    <div class="cal-dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+    <div class="cal-dow"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
     <div class="cal-grid" id="cal-grid"></div>
+    </div>
 
   </div>
 </section>
@@ -1424,7 +1470,9 @@ function renderHeatmap() {
 
   const done = computeStats().days;
   document.getElementById('history-range').textContent = `${done} / ${CFG.GOAL_DAYS}`;
-  document.getElementById('goal-fill').style.width = Math.min(100, done / CFG.GOAL_DAYS * 100) + '%';
+  const pct = Math.min(100, done / CFG.GOAL_DAYS * 100);
+  document.getElementById('goal-fill').style.width = pct + '%';
+  document.getElementById('goal-pct').textContent = Math.round(pct) + '%';
   document.getElementById('goal-sub').textContent =
     `${Math.max(0, CFG.GOAL_DAYS - done)} days to go · since ` +
     parseLocal(start).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
