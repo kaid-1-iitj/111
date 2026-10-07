@@ -756,8 +756,6 @@
     .cta-chev { width: 20px; height: 20px; position: absolute; right: 22px; }
     .save-msg { margin-top: 4px; min-height: 14px; }
 
-    @media (max-height: 790px) { .quote-card { display: none; } }
-    @media (max-height: 700px) { .sec-head { display: none; } }
 
     /* Floating pill: labels on both tabs */
     .tab .tab-lbl { display: inline; }
@@ -813,6 +811,18 @@
     .hstreak svg { width: 19px; height: 19px; fill: none; transition: fill 0.25s, color 0.25s; }
     .hstreak.lit { color: #fff; }
     .hstreak.lit svg { color: #FFB23E; fill: #FFB23E; }
+
+    /* Daily thought grows to fill the free space */
+    .quote-card {
+      display: flex; flex-direction: column; justify-content: center;
+      flex: 1 1 auto; min-height: 150px;
+      margin: 0 0 12px; padding: 18px 20px 14px 52px;
+    }
+    .quote-card::before { left: 16px; top: 12px; font-size: 64px; }
+    .quote-card::after { width: 110px; height: 110px; top: auto; bottom: 6px; right: 10px; opacity: 0.09; }
+    .quote-text { font-size: 18px; line-height: 1.6; }
+    .quote-sig { font-size: 24px; margin-top: 8px; }
+    .practices { flex: 0 0 auto; }
   </style>
 </head>
 <body>
