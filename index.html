@@ -878,7 +878,6 @@
 
     <div class="sec-head">
       <div class="sec-title">Today's Sadhana</div>
-      <div class="sec-pill" id="sec-pill">0 of 4 completed</div>
     </div>
 
     <div class="practices">
@@ -1207,9 +1206,6 @@ function renderCards() {
   Object.entries(state).forEach(([k, on]) => {
     document.getElementById('pc-' + k).classList.toggle('done', on);
   });
-
-  const count = Object.values(state).filter(Boolean).length;
-  document.getElementById('sec-pill').textContent = count + ' of 4 completed';
 
   document.getElementById('cta').disabled =
     !(state.surya || state.shambhavi || state.bhuta || state.devi);
