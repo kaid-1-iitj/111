@@ -1029,6 +1029,7 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════ SCRIPT -->
+<script src="quotes.js"></script>
 <script>
 /* ============================================================
    CONFIG
@@ -1148,23 +1149,23 @@ function nextMilestone(streak) {
 /* ============================================================
    INIT
    ============================================================ */
-const QUOTES = [
-  "Do not just learn from your failures; learn not to fail. Whatever you aspire for, figure out how to make it happen. Life is your Karma – it is your Making.",
-  "The most beautiful moments in life are moments when you are expressing your joy, not when you are seeking it.",
-  "If you want to be successful, don’t seek success – seek competence, empowerment; do nothing short of the best that you can do.",
-  "You are not the body. You are not even the mind. You are the consciousness which is aware of both.",
-  "Meditation is not about being in a special place or situation. It is about turning inward.",
-  "Every moment, every situation, every breath is a possibility. To make of it what you will is entirely up to you.",
-  "The quality of your life depends on how well you manage your body, mind, emotions, and the world around you.",
-  "Whatever you do, do it with total involvement – that is all that matters.",
-  "To live in full intensity, you need an inner stillness. Without that, everything wears you out.",
-  "Sadhana is not a ritual. It is your longing to include everything in your experience.",
-  "A spiritual process means you are moving towards a dimension where experiential knowledge becomes the only truth.",
-];
+
+/* One quote per day. Quotes are shuffled in rounds, so nothing repeats
+   until every quote in quotes.js has been shown. */
 function setDailyQuote() {
-  const d = new Date();
-  const idx = (d.getFullYear() * 366 + d.getMonth() * 31 + d.getDate()) % QUOTES.length;
-  document.getElementById('quote-text').textContent = QUOTES[idx];
+  const n = QUOTES.length;
+  const day = Math.floor((Date.now() - new Date().getTimezoneOffset() * 6e4) / 864e5);
+  const order = round => {
+    const idx = [...Array(n).keys()];
+    let seed = (round + 1) * 2654435761 >>> 0;
+    const rnd = () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296;
+    for (let k = n - 1; k > 0; k--) { const r = Math.floor(rnd() * (k + 1)); [idx[k], idx[r]] = [idx[r], idx[k]]; }
+    return idx;
+  };
+  const round = Math.floor(day / n);
+  let cur = order(round);
+  if (round > 0 && n > 1 && cur[0] === order(round - 1)[n - 1]) cur.push(cur.shift());  // no repeat across rounds
+  document.getElementById('quote-text').textContent = QUOTES[cur[day % n]];
 }
 
 function init() {

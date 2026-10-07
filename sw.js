@@ -1,9 +1,10 @@
 /* Sadhana Tracker — lightweight service worker */
-const CACHE = 'sadhana-v6';
+const CACHE = 'sadhana-v7';
 const SHELL = [
   './',
   './index.html',
   './manifest.json',
+  './quotes.js',
   './icon.svg',
   './icon-192.png',
   './icon-512.png',
@@ -45,7 +46,8 @@ self.addEventListener('fetch', e => {
   // immediately; fall back to cache only when offline.
   const isHTML = req.mode === 'navigate' ||
                  url.pathname.endsWith('/') ||
-                 url.pathname.endsWith('index.html');
+                 url.pathname.endsWith('index.html') ||
+                 url.pathname.endsWith('quotes.js');
   if (url.origin === self.location.origin && isHTML) {
     e.respondWith(
       fetch(req, { cache: 'no-store' }).then(res => {
