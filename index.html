@@ -1197,11 +1197,10 @@ function init() {
 /* Hero ring (streak → next milestone) + header (points, day count) */
 function refreshHero() {
   const st = computeStats();
-  const next = nextMilestone(st.streak);
   document.getElementById('day-num').textContent = st.streak;
   document.getElementById('best-num').textContent = 'Best ' + st.best;
   document.getElementById('ring-fg').style.strokeDashoffset =
-    (194.8 * (1 - Math.min(1, st.streak / next))).toFixed(1);
+    (194.8 * (1 - Math.min(1, st.days / CFG.GOAL_DAYS))).toFixed(1);   // ring = progress on the road to 1008
   document.getElementById('header-left').innerHTML =
     `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/></svg><span><b>◆ ${st.points}</b> · ${st.days}/${CFG.GOAL_DAYS}</span>`;
 }
