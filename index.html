@@ -707,23 +707,64 @@
     /* ─── Today: fits one screen, never scrolls ─────── */
     .stage { height: 100%; min-height: 0; }
     .card { height: 100%; }
-    .hero-flex { margin-bottom: 6px; }
-    .greeting { font-size: 22px; }
+    .hero-flex { margin-bottom: 8px; }
+    .greeting { font-size: 24px; }
     .today-date { margin-bottom: 8px; }
-    .day-ring { width: 64px; height: 64px; }
-    .ring-num { font-size: 22px; }
-    .hero-right { gap: 2px; }
-    .quote-card { margin-bottom: 8px; }
-    .quote-card::before { font-size: 48px; top: -6px; }
-    .quote-text { font-size: 13.5px; line-height: 1.5; margin-top: 12px; }
-    .quote-sig { font-size: 19px; margin-top: 4px; }
+    .tdot { width: 10px; height: 10px; }
+    .tdot-label { font-size: 12px; margin-left: 4px; }
+    .day-ring { width: 76px; height: 76px; }
+    .ring-bg, .ring-fg { stroke-width: 6; }
+    .ring-bg { stroke: rgba(236,103,27,0.16); }
+    .ring-num { font-size: 26px; }
+    .ring-lbl { font-size: 6.5px; letter-spacing: 0.6px; font-weight: 700; margin-top: 3px; white-space: nowrap; }
+    .hero-right { gap: 6px; align-items: center; }
+    .best-lbl {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 11px; border-radius: 999px;
+      background: var(--cream-2); color: var(--terracotta);
+      font-size: 12px; font-weight: 600; margin: 0; letter-spacing: 0;
+    }
+    .best-lbl svg { width: 13px; height: 13px; }
+
+    .quote-card {
+      margin: 0 0 12px; padding: 14px 16px 10px 44px; position: relative; overflow: hidden;
+      background: rgba(252,239,224,0.7); border-radius: 16px;
+    }
+    .quote-card::before { content: '“'; left: 14px; top: 8px; font-size: 52px; opacity: 0.45; }
+    .quote-card::after {
+      content: ''; position: absolute; right: 8px; top: 10px; width: 70px; height: 70px; opacity: 0.1;
+      background: no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23EC671B'%3E%3Cpath d='M12 4c1.8 2.2 2.8 4.4 2.8 6.6 0 2.4-1.2 4.4-2.8 5.4-1.6-1-2.8-3-2.8-5.4C9.2 8.4 10.2 6.2 12 4z'/%3E%3Cpath d='M4 9c2.6.2 4.6 1.2 5.8 3 .8 1.2 1 2.6.6 4-2.8 0-5-1.2-6.2-3.2C3.4 11.6 3.4 10.4 4 9z'/%3E%3Cpath d='M20 9c.6 1.4.6 2.6-.2 3.8-1.2 2-3.4 3.2-6.2 3.2-.4-1.4-.2-2.8.6-4C15.4 10.2 17.4 9.2 20 9z'/%3E%3C/svg%3E");
+    }
+    .quote-text { font-size: 14px; line-height: 1.5; margin: 0; padding: 0; text-align: left; position: relative; z-index: 1; }
+    .quote-sig { font-size: 20px; margin-top: 2px; position: relative; z-index: 1; }
+
+    .sec-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .sec-title { font-family: var(--font-serif); font-weight: 600; font-size: 20px; }
+    .sec-pill { font-size: 12px; color: var(--mid); background: var(--muted); padding: 6px 12px; border-radius: 999px; }
+
     .practices { gap: 9px; }
-    .pcard { padding: 11px 16px; }
-    .pglyph-chip { width: 40px; height: 40px; }
-    .cta-wrap { padding-top: 10px; }
-    .cta { padding: 14px; }
+    .pcard { padding: 11px 16px 11px 14px; border-left: 4px solid var(--pc); }
+    .pcard.s-surya, .pcard.s-shambhavi, .pcard.s-bhuta, .pcard.s-devi { border-left-color: var(--pc) !important; }
+    .pglyph-chip { width: 42px; height: 42px; }
+    .pcheck { width: 30px; height: 30px; }
+
+    .cta-wrap { padding-top: 12px; }
+    .cta {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      padding: 0 22px; height: 56px; position: relative; font-size: 17px;
+    }
+    .cta-ico { width: 24px; height: 24px; }
+    .cta-chev { width: 20px; height: 20px; position: absolute; right: 22px; }
     .save-msg { margin-top: 4px; min-height: 14px; }
-    @media (max-height: 720px) { .quote-card { display: none; } }
+
+    @media (max-height: 790px) { .quote-card { display: none; } }
+    @media (max-height: 700px) { .sec-head { display: none; } }
+
+    /* Floating pill: labels on both tabs */
+    .tab .tab-lbl { display: inline; }
+    .tab { color: #6f6f73; padding: 0 18px; font-size: 14px; }
+    .tab.active { color: #fff; padding: 0 22px 0 18px; }
+    .tab-bar { gap: 6px; padding: 7px 8px; }
   </style>
 </head>
 <body>
@@ -744,11 +785,8 @@
     <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
   </symbol>
   <symbol id="g-bhuta" viewBox="0 0 24 24">
-    <g fill="currentColor">
-      <circle cx="12" cy="5" r="1.8"/><circle cx="18.66" cy="9.84" r="1.8"/>
-      <circle cx="16.11" cy="17.66" r="1.8"/><circle cx="7.89" cy="17.66" r="1.8"/>
-      <circle cx="5.34" cy="9.84" r="1.8"/>
-    </g>
+    <path d="M12 3 C12 3 6.2 9.6 6.2 14.2 a5.8 5.8 0 0 0 11.6 0 C17.8 9.6 12 3 12 3 Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+    <path d="M9.4 14.6 a2.6 2.6 0 0 0 2.2 2.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
   </symbol>
   <symbol id="g-devi" viewBox="0 0 24 24">
     <path d="M4 6.5 L20 6.5 L12 20 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
@@ -795,7 +833,7 @@
           <span class="tdot td-shambhavi" id="td-shambhavi"></span>
           <span class="tdot td-bhuta"     id="td-bhuta"></span>
           <span class="tdot td-devi"      id="td-devi"></span>
-          <span class="tdot-label" id="td-label">0 of 4</span>
+          <span class="tdot-label" id="td-label">0 of 4 completed</span>
         </div>
       </div>
       <div class="hero-right" id="day-row">
@@ -806,16 +844,21 @@
           </svg>
           <div class="ring-center">
             <div class="ring-num" id="day-num">0</div>
-            <div class="ring-lbl" id="ring-lbl">streak</div>
+            <div class="ring-lbl" id="ring-lbl">day streak</div>
           </div>
         </div>
-        <div class="best-lbl" id="best-lbl">Best 0</div>
+        <div class="best-lbl"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 10H5z"/></svg><span id="best-num">Best 0</span></div>
       </div>
     </div>
 
     <div class="quote-card">
       <div class="quote-text" id="quote-text"></div>
       <div class="quote-sig">– Sadhguru</div>
+    </div>
+
+    <div class="sec-head">
+      <div class="sec-title">Today's Sadhana</div>
+      <div class="sec-pill" id="sec-pill">0 of 4 completed</div>
     </div>
 
     <div class="practices">
@@ -865,7 +908,11 @@
     </div>
 
     <div class="cta-wrap">
-      <button class="cta" id="cta" onclick="saveToday()" disabled>Shambhoo</button>
+      <button class="cta" id="cta" onclick="saveToday()" disabled>
+        <svg class="cta-ico" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4c1.8 2.2 2.8 4.4 2.8 6.6 0 2.4-1.2 4.4-2.8 5.4-1.6-1-2.8-3-2.8-5.4C9.2 8.4 10.2 6.2 12 4z"/><path d="M4 9c2.6.2 4.6 1.2 5.8 3 .8 1.2 1 2.6.6 4-2.8 0-5-1.2-6.2-3.2C3.4 11.6 3.4 10.4 4 9z"/><path d="M20 9c.6 1.4.6 2.6-.2 3.8-1.2 2-3.4 3.2-6.2 3.2-.4-1.4-.2-2.8.6-4C15.4 10.2 17.4 9.2 20 9z"/><path d="M12 18.5c-3 0-5.6-.8-8-2.6 2.6.1 5 .9 8 .9s5.4-.8 8-.9c-2.4 1.8-5 2.6-8 2.6z"/></svg>
+        <span id="cta-text">Shambhoo</span>
+        <svg class="cta-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
       <div class="save-msg" id="save-msg"></div>
     </div>
   </div>
@@ -1109,7 +1156,7 @@ function refreshHero() {
   const st = computeStats();
   const next = nextMilestone(st.streak);
   document.getElementById('day-num').textContent = st.streak;
-  document.getElementById('best-lbl').textContent = 'Best ' + st.best;
+  document.getElementById('best-num').textContent = 'Best ' + st.best;
   document.getElementById('ring-fg').style.strokeDashoffset =
     (194.8 * (1 - Math.min(1, st.streak / next))).toFixed(1);
   document.getElementById('header-left').innerHTML =
@@ -1147,7 +1194,8 @@ function renderCards() {
   });
 
   const count = Object.values(state).filter(Boolean).length;
-  document.getElementById('td-label').textContent = count + ' of 4';
+  document.getElementById('td-label').textContent = count + ' of 4 completed';
+  document.getElementById('sec-pill').textContent = count + ' of 4 completed';
 
   document.getElementById('cta').disabled =
     !(state.surya || state.shambhavi || state.bhuta || state.devi);
@@ -1311,7 +1359,7 @@ async function saveToday() {
   renderYatra();
 
   btn.disabled = true;
-  btn.textContent = 'Saving…';
+  document.getElementById('cta-text').textContent = 'Saving…';
   const ok = await postDay(entry);
   if (ok) {
     msg.className = 'save-msg ok';
@@ -1322,7 +1370,7 @@ async function saveToday() {
     msg.textContent = '✓ Saved on device · cloud sync failed';
   }
   btn.disabled = false;
-  btn.textContent = 'Shambhoo';
+  document.getElementById('cta-text').textContent = 'Shambhoo';
   setTimeout(() => { msg.textContent = ''; msg.className = 'save-msg'; }, 3500);
 }
 
