@@ -264,6 +264,13 @@
       color: var(--orange);
       letter-spacing: -0.5px;
     }
+    .best-lbl {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--light);
+      letter-spacing: 0.3px;
+      margin-right: 2px;
+    }
     .ring-lbl {
       font-size: 8px;
       letter-spacing: 1.4px;
@@ -786,6 +793,7 @@
             <div class="ring-lbl" id="ring-lbl">streak</div>
           </div>
         </div>
+        <div class="best-lbl" id="best-lbl">Best 0</div>
       </div>
     </div>
 
@@ -855,21 +863,6 @@
     <div class="history-head">
       <div class="history-title">Your Yatra</div>
       <div class="history-range" id="history-range">—</div>
-    </div>
-
-    <div class="stats">
-      <div class="stat">
-        <div class="stat-num" id="st-streak" style="color:var(--orange)">0</div>
-        <div class="stat-lbl">Streak</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num" id="st-best" style="color:var(--blue)">0</div>
-        <div class="stat-lbl">Best</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num" id="st-done" style="color:var(--crimson)">0</div>
-        <div class="stat-lbl">Days</div>
-      </div>
     </div>
 
     <div class="heat-wrap">
@@ -1097,6 +1090,7 @@ function refreshHero() {
   const st = computeStats();
   const next = nextMilestone(st.streak);
   document.getElementById('day-num').textContent = st.streak;
+  document.getElementById('best-lbl').textContent = 'Best ' + st.best;
   document.getElementById('ring-fg').style.strokeDashoffset =
     (194.8 * (1 - Math.min(1, st.streak / next))).toFixed(1);
   document.getElementById('header-left').innerHTML =
@@ -1330,7 +1324,6 @@ function shortDate(date) {
 
 function renderYatra() {
   renderHeatmap();
-  renderStats();
   renderMonth();
 }
 
@@ -1370,13 +1363,6 @@ document.getElementById('heat-grid').addEventListener('click', e => {
   const k = e.target.dataset && e.target.dataset.key;
   if (k) openDay(k);
 });
-
-function renderStats() {
-  const st = computeStats();
-  document.getElementById('st-streak').textContent = st.streak;
-  document.getElementById('st-best').textContent   = st.best;
-  document.getElementById('st-done').textContent   = st.days;
-}
 
 function inRepairWindow(key) {
   return key < S.todayKey && daysBetween(key, S.todayKey) <= CFG.REPAIR_WINDOW_DAYS;
