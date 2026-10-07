@@ -1,5 +1,5 @@
 /* Sadhana Tracker — lightweight service worker */
-const CACHE = 'sadhana-v5';
+const CACHE = 'sadhana-v6';
 const SHELL = [
   './',
   './index.html',
@@ -48,7 +48,7 @@ self.addEventListener('fetch', e => {
                  url.pathname.endsWith('index.html');
   if (url.origin === self.location.origin && isHTML) {
     e.respondWith(
-      fetch(req).then(res => {
+      fetch(req, { cache: 'no-store' }).then(res => {
         if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
         return res;
       }).catch(() => caches.match(req).then(c => c || caches.match('./index.html')))

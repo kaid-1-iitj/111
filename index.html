@@ -1673,6 +1673,13 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').catch(e => console.log('SW skipped:', e.message));
   });
+  // A new service worker took over → reload once so the latest version shows
+  if (navigator.serviceWorker.controller) {
+    let reloaded = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!reloaded) { reloaded = true; location.reload(); }
+    });
+  }
 }
 
 init();
