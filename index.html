@@ -786,7 +786,7 @@
     /* Yatra header — simple */
     .history-head { align-items: baseline; margin-bottom: 10px; }
     .y-count { font-family: var(--font-head); font-weight: 700; font-size: 15px; color: var(--terracotta); }
-    .goal-sub { margin: 8px 0 16px; font-size: 12px; color: var(--light); display: block; }
+    .goal-bar { margin-bottom: 16px; }
 
     /* Hero: LeetCode-style streak */
     .hero-flex { align-items: center; }
@@ -959,7 +959,6 @@
       <div class="y-count" id="history-range">—</div>
     </div>
     <div class="goal-bar"><div class="goal-fill" id="goal-fill"></div></div>
-    <div class="goal-sub" id="goal-sub"></div>
 
     <div class="heat-wrap">
       <div class="heat-scroll" id="heat-scroll">
@@ -1445,7 +1444,6 @@ function renderHeatmap() {
   document.getElementById('history-range').textContent = `${done} / ${CFG.GOAL_DAYS}`;
   const pct = Math.min(100, done / CFG.GOAL_DAYS * 100);
   document.getElementById('goal-fill').style.width = pct + '%';
-  document.getElementById('goal-sub').textContent = `${Math.max(0, CFG.GOAL_DAYS - done)} days to go`;
 }
 document.getElementById('heat-grid').addEventListener('click', e => {
   const k = e.target.dataset && e.target.dataset.key;
